@@ -11,12 +11,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Command line options.')
     parser.add_argument('--rootdir', dest='rootdir', type=str, required=True,
                         help="Root directory of Apache Pony Mail")
-    parser.add_argument('--load', dest='load', type=str,
-                        help="Load only a specific yaml spec instead of all test specs")
+    parser.add_argument('--load', dest='load', type=str, nargs='+',
+                        help="Load only specific yaml spec files instead of all test specs")
     args = parser.parse_args()
 
     if args.load:
-        spec_files = [args.load]
+        spec_files = args.load
     else:
         spec_files = [os.path.join('yaml', x) for x in os.listdir('yaml') if x.endswith('.yaml')]
 
