@@ -13,3 +13,8 @@ The root directory has a `runall.py`, which will run all tests it can find in th
 yaml directory, and summarize the results at the end. You may also run individual 
 tests from the tests directory (more on that as we build out the test dir).
 
+CLI args for `runall.py`:
+- `--rootdir`: The root filepath of your Apache Pony Mail installation to test against
+- `--fof`: Fail if one test fails, exiting the suite
+- `--load [filename]`: Only load a specific yaml test specification, don't run all tests
+
