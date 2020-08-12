@@ -59,7 +59,7 @@ if __name__ == '__main__':
             break
 
     print("-------------------------------------")
-    print("Done with %u test%s in %.2f seconds" % (tests_total, 's' if tests_total != 1 else '', time.time() - now))
+    print("Done with %u specification%s in %.2f seconds" % (tests_total, 's' if tests_total != 1 else '', time.time() - now))
     print("Specs processed: %4u" % tests_total)
     print("Total tests run: %4u" % (sub_success+sub_failure))
     print("Tests succeeded: %4u" % sub_success)
