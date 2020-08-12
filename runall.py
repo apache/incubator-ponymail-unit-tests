@@ -6,6 +6,7 @@ import subprocess
 import argparse
 import yaml
 import time
+import re
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Command line options.')
@@ -25,6 +26,8 @@ if __name__ == '__main__':
     tests_success = 0
     tests_failure = 0
     tests_total = 0
+    sub_success = 0
+    sub_failure = 0
     now = time.time()
 
     failbreak = False
@@ -37,20 +40,30 @@ if __name__ == '__main__':
                 tests_total += 1
                 print("Running '%s' tests from %s..." % (test_type, spec_file))
                 try:
-                    subprocess.check_call(('/usr/bin/python3', 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file))
+                    rv = subprocess.check_output(('/usr/bin/python3', 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file))
                     tests_success += 1
                 except subprocess.CalledProcessError as e:
+                    rv = e.output
                     print("%s test from %s failed with code %d" % (test_type, spec_file, e.returncode))
                     tests_failure += 1
                     if args.failonfail:
                         failbreak = True
                         break
+                finally:
+                    # Fetch successes and failures from this spec run, add to total
+                    m = re.search(r"^\[DONE\] (\d+) tests run, (\d+) failed.", rv.decode('ascii'), re.MULTILINE)
+                    if m:
+                        sub_success += int(m.group(1)) - int(m.group(2))
+                        sub_failure += int(m.group(2))
         if failbreak:
             break
 
     print("-------------------------------------")
     print("Done with %u tests in %.2f seconds" % (tests_total, time.time() - now))
-    print("%u Were GOOD, %u were BAD" % (tests_success, tests_failure))
+    print("Specs processed: %4u" % tests_total)
+    print("Total tests run: %4u" % (sub_success+sub_failure))
+    print("Tests succeeded: %4u" % sub_success)
+    print("Tests failed:    %4u" % sub_failure)
     print("-------------------------------------")
     if tests_failure:
         sys.exit(-1)
