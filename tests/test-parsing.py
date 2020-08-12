@@ -20,21 +20,27 @@ def generate_specs(args):
     import archiver
     archie = archiver.Archiver(parse_html=args.html)
     sys.stderr.write("Generating parsing specs for file '%s'...\n" % args.mboxfile)
-    gen_spec = []
-    mbox = mailbox.mbox(args.mboxfile, None, create=False)
-    for key in mbox.keys():
-        message_raw = mbox.get_bytes(key)  # True raw format, as opposed to calling .as_bytes()
-        message = mbox.get(key)
-        lid = archiver.normalize_lid(message.get('list-id', '??'))
-        json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
-        gen_spec.append({
-            'index': key,
-            'message-id': message.get('message-id').strip(),
-            'body_sha3_256': hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest() if json and json['body'] else None,
-            'attachments': json['attachments'] if json else None,
-        })
+    items = {}
+    for mboxfile in args.mboxfile:
+        tests = []
+        mbox = mailbox.mbox(mboxfile, None, create=False)
+        for key in mbox.keys():
+            message_raw = mbox.get_bytes(key)  # True raw format, as opposed to calling .as_bytes()
+            message = mbox.get(key)
+            lid = archiver.normalize_lid(message.get('list-id', '??'))
+            json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+            body_sha3_256 = None
+            if json and json.get('body') is not None:
+                body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
+            tests.append({
+                'index': key,
+                'message-id': message.get('message-id', '').strip(),
+                'body_sha3_256': body_sha3_256,
+                'attachments': json['attachments'] if json else None,
+            })
+        items[mboxfile] = tests
     with open(args.generate, 'w') as f:
-        yaml.dump({'args': {'cmd': " ".join(sys.argv), 'parse_html': True if args.html else False}, 'parsing': {args.mboxfile: gen_spec}}, f)
+        yaml.dump({'args': {'cmd': " ".join(sys.argv), 'parse_html': True if args.html else False}, 'parsing': items}, f)
         f.close()
 
 
@@ -58,7 +64,9 @@ def run_tests(args):
             message = mbox.get(test['index'])
             lid = archiver.normalize_lid(message.get('list-id', '??'))
             json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
-            body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest() if json and json['body'] else None
+            body_sha3_256 = None
+            if json and json.get('body') is not None:
+                body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
             if body_sha3_256 != test['body_sha3_256']:
                 errors += 1
                 sys.stderr.write("""[FAIL] index %u: \nExpected:\n%s\nGot:\n%s\n""" %
@@ -80,7 +88,7 @@ def main():
                         help='Generate a test yaml spec, output to file specified here')
     parser.add_argument('--load', dest='load', type=str,
                         help='Load and run tests from a yaml spec file')
-    parser.add_argument('--mbox', dest='mboxfile', type=str,
+    parser.add_argument('--mbox', dest='mboxfile', type=str, nargs='+',
                         help='If generating spec, which mbox corpus file to use for testing')
     parser.add_argument('--rootdir', dest='rootdir', type=str, required=True,
                         help="Root directory of Apache Pony Mail")
