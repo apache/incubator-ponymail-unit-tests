@@ -9,6 +9,7 @@ import time
 import re
 
 if __name__ == '__main__':
+    PYTHON3 = sys.executable
     parser = argparse.ArgumentParser(description='Command line options.')
     parser.add_argument('--rootdir', dest='rootdir', type=str, required=True,
                         help="Root directory of Apache Pony Mail")
@@ -40,7 +41,7 @@ if __name__ == '__main__':
                 tests_total += 1
                 print("Running '%s' tests from %s..." % (test_type, spec_file))
                 try:
-                    rv = subprocess.check_output(('/usr/bin/python3', 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file))
+                    rv = subprocess.check_output((PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file))
                     tests_success += 1
                 except subprocess.CalledProcessError as e:
                     rv = e.output
