@@ -20,7 +20,7 @@ def generate_specs(args):
     import generators
     archie = archiver.Archiver(parse_html=parse_html)
     yml = {}
-    for gen_type in generators.__GENERATORS:
+    for gen_type in generators.generator_names():
         sys.stderr.write("Generating specs for type '%s'...\n" % gen_type)
         archiver.archiver_generator = gen_type
         gen_spec = []
