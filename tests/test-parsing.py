@@ -11,7 +11,6 @@ import argparse
 import collections
 import hashlib
 
-parse_html = False
 nonce = None
 fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None)
 
@@ -57,7 +56,7 @@ def run_tests(args):
         no_tests = len(tests)
         if no_messages != no_tests:
             sys.stderr.write("Warning: %s run for parsing test of %s contains %u tests, but mbox file has %u emails!\n" %
-                             (mboxfile, no_tests, no_messages))
+                             ('TBA', mboxfile, no_tests, no_messages))
         for test in tests:
             tests_run += 1
             message_raw = mbox.get_bytes(test['index'])  # True raw format, as opposed to calling .as_bytes()
