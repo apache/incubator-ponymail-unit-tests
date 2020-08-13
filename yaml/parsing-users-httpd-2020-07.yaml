@@ -1,4 +1,6 @@
 args:
+  cmd: tests/test-parsing.py --generate yaml/parsing-users-httpd-2020-07.yaml --mbox
+    corpus/users_httpd_apache_org_2020-07.mbox --rootdir /x1/incubator-ponymail-foal/
   parse_html: false
 parsing:
   corpus/users_httpd_apache_org_2020-07.mbox:
@@ -35,7 +37,7 @@ parsing:
     index: 5
     message-id: <CAKXhZzzP+_zyFopQAcfaoE2H2zMQEajzHS595XLPm9Vh_nO1Uw@mail.gmail.com>
   - attachments: []
-    body_sha3_256: cf40c4d920b02bfe991c6aaac89ec4c07482f3aa6857574c07886db1198466ac
+    body_sha3_256: b78291663dc09749e706e42c046b27349e36d4ffa40d6ff077608fd7c48efd7c
     index: 6
     message-id: <fddf1e80-fa90-8121-0461-6d0a95ce0225@unclassified.de>
   - attachments: []
@@ -127,7 +129,7 @@ parsing:
     index: 26
     message-id: <CAGBAQ44pPVPC8TzA49BHmZPJEXFfPBOj5nK7gugQ_1waTmfvGA@mail.gmail.com>
   - attachments: []
-    body_sha3_256: 31e3c092db596fbb49c49767e04cf2ac909d2efac6bc306a29b5f72b9d7d1758
+    body_sha3_256: 9096676b9c96df55154be6524d698861b457734b2cc261a6cd7e12fa08a57d5c
     index: 27
     message-id: <ecf2300d-d9bf-345a-3a8a-6d86ea6c8e0d@schramm.by>
   - attachments: []
@@ -163,15 +165,15 @@ parsing:
     index: 35
     message-id: <91F46997-D3DC-4864-9153-0CF667AAEE5B@jala.com>
   - attachments: []
-    body_sha3_256: f8006d4fbee08e789e05344f53ccdab133dc9b89652397b50d2b99db1218ccd8
+    body_sha3_256: 045106f2ca8548c55c3fb447efb2cf8c3c0f985f44f01d2c47d391960f388cd4
     index: 36
     message-id: <685e3816-ccbc-6444-8904-8f3abfe8a434@schramm.by>
   - attachments: []
-    body_sha3_256: dbd9564e1f71ecae7f81c145c5dc176e400aa18cf75d2776b57fcb5a64e093b2
+    body_sha3_256: 033dd075514a783a117372b057ed996b538b95497940b0b09e35c06f5f63d55b
     index: 37
     message-id: <c4152eeb-930e-2011-f822-1b20426ca65b@schramm.by>
   - attachments: []
-    body_sha3_256: 4cf29595b37921266310a3a36283255a476d3ab88b2c7e59f6bef331dc1be031
+    body_sha3_256: a74fa72ac35a4b0a974b42fa4abcbf2b56e3025e8e532ab61d211b71acec5a6f
     index: 38
     message-id: <518b36d0-d055-89f1-d730-146509695a8d@schramm.by>
   - attachments:
@@ -183,7 +185,7 @@ parsing:
     index: 39
     message-id: <8A51185C-FF2D-4DF3-A1CE-93A327F10292@me.com>
   - attachments: []
-    body_sha3_256: 75422724d6c8912eea2882c2f33307f5b5089eabf64e3aae98799164c4d18f20
+    body_sha3_256: 3d4124fa87d0a85a21098ef7783d644c41cac5ba20054039331662140c0f0033
     index: 40
     message-id: <13e8cfb5-c006-b06e-d6e4-ade05d99528a@netrition.com>
   - attachments: []
@@ -227,7 +229,7 @@ parsing:
     index: 50
     message-id: <CALK=YjOdVMngS96ztAjpK5dNE7AJ0ricp_A3019AY687DwwXbg@mail.gmail.com>
   - attachments: []
-    body_sha3_256: 0c6bdf6b5607e0b01796b3f6cf3a7a1ac4a343d04d06b5466a28271bbe96f607
+    body_sha3_256: d6e5c818b1144f11b9bfc3f803eba97b1b214422544628614c3e6a984745a3a3
     index: 51
     message-id: <5F0D1C69.2010003@connotech.com>
   - attachments: []
@@ -255,11 +257,11 @@ parsing:
     index: 57
     message-id: <92E32A96-DFAE-45C0-AC50-7FF5C5FE6FE1@gmail.com>
   - attachments: []
-    body_sha3_256: 6ae2e1b570a1812571b175e9328ec5014043ec6c793234113a6b133d7df3eadb
+    body_sha3_256: 7fcae7a66cd2ee9f82a064fa7d6c90b18832079becaa2c624edef1b7793722ff
     index: 58
     message-id: <5F0F7A54.2070306@connotech.com>
   - attachments: []
-    body_sha3_256: b82a53d848253a2ee404b60a653ca2103e8c95d2e2c6ab4127038c2aaa69b0c2
+    body_sha3_256: e963d116d8e54809be2a7be7e3f273db2e7540d3c02214f94d3c96c9504b9a25
     index: 59
     message-id: <52edd8b3-4366-1744-2bbe-c8bc0bb98c94@gmail.com>
   - attachments: []
@@ -287,7 +289,7 @@ parsing:
     index: 65
     message-id: <028401d65cf2$72c1e8c0$5845ba40$@mail.ru>
   - attachments: []
-    body_sha3_256: a2dabee90df9ab56b72620f713e72f49f2a4b0f0f4ec406818ba312c0c9c19c0
+    body_sha3_256: 40b45e093fce03f47a500f9bc2a901062010cfa590ac806e6874d603496417cb
     index: 66
     message-id: <73ec1315-7d0c-e5bb-ff8c-8239b755b0ce@hotmail.com>
   - attachments: []
@@ -379,7 +381,7 @@ parsing:
     index: 86
     message-id: <038801d66131$16a656a0$43f303e0$@mail.ru>
   - attachments: []
-    body_sha3_256: 7b64b0ea3b10b18ae05ccdae511a8c959c4e7fc9d9e03de84e9ce97144a9d3b8
+    body_sha3_256: d20b877bedcd0f820c7a6c39a68c196d0abb30ae99db0be72211631716d8ade5
     index: 87
     message-id: <36a937ca-8e46-36da-e383-9331bd0829ec@gmx.de>
   - attachments: []
@@ -399,7 +401,7 @@ parsing:
     index: 91
     message-id: <202007251056.03243.Antony.Stone@apache.open.source.it>
   - attachments: []
-    body_sha3_256: 516a84f7188abece2980dd6b84e096df127cee5ac139a1f1ab283add4b6e752a
+    body_sha3_256: 6ef178a04e40c97ed8e7b5dc9336a3219490aca03fc7a26ca1917ed233e93209
     index: 92
     message-id: <fcc60de1-2b54-4b4b-712b-4a47a07107a9@gmail.com>
   - attachments: []
@@ -423,11 +425,11 @@ parsing:
     index: 97
     message-id: <TY2PR01MB3052E9D44C9D149EBEA74406EB700@TY2PR01MB3052.jpnprd01.prod.outlook.com>
   - attachments: []
-    body_sha3_256: 5cd65cc06d2e216428bc53514f1e1ed5a4567cb19a4ba029b926b85ff8ff0648
+    body_sha3_256: 59ab162fd494ee8f06cf30e59f0d66036ae3f5e3fde1b05863e4784b1ef4ef16
     index: 98
     message-id: <69cb29ec-edb2-99e1-1b15-6d8a5739e970@netrition.com>
   - attachments: []
-    body_sha3_256: 6edad4206465d0b3412582a78e3d05a198dac7d4513df849e7e1653be1cd5a59
+    body_sha3_256: fc1552fd231d9cfc552ec6108a9e26942cf6e3afb6434aafc6db22396f76d82b
     index: 99
     message-id: <d05a515a-8174-0eb2-7f0e-266ab500e817@netrition.com>
   - attachments: []
