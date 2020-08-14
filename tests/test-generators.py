@@ -45,11 +45,10 @@ def run_tests(args):
     import archiver
     errors = 0
     tests_run = 0
-    archie = archiver.Archiver(parse_html=parse_html)
     yml = yaml.safe_load(open(args.load, 'r'))
     for mboxfile, run in yml['generators'].items():
         for gen_type, tests in run.items():
-            archiver.archiver_generator = gen_type
+            archie = archiver.Archiver(generator=gen_type, parse_html=parse_html)
             mbox = mailbox.mbox(mboxfile, None, create=False)
             no_messages = len(mbox.keys())
             no_tests = len(tests)
