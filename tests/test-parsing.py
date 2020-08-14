@@ -73,7 +73,7 @@ def run_tests(args):
             if (json['attachments'] if json else None) != test['attachments']:
                 errors += 1
                 sys.stderr.write("""[FAIL] index %u: \nExpected:\n%s\nGot:\n%s\n""" %
-                                 (test['index'], test['attachments'], json['attachments']))
+                                 (test['index'], test['attachments'], json['attachments'] if json else None))
             else:
                 print("[PASS] index %u" % (test['index']))
     print("[DONE] %u tests run, %u failed." % (tests_run, errors))
