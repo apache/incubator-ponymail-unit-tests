@@ -42,7 +42,7 @@ def generate_specs(args):
                 'index': key,
                 'message-id': message.get('message-id', '').strip(),
                 'body_sha3_256': body_sha3_256,
-                'attachments': json['attachments'] if json else None,
+                'attachments': json['attachments'] if json else [],
             })
         items[mboxfile] = tests
     with open(args.generate, 'w') as f:
@@ -83,10 +83,12 @@ def run_tests(args):
                 errors += 1
                 sys.stderr.write("""[FAIL] index %u: \nExpected:\n%s\nGot:\n%s\n""" %
                                  (test['index'], test['body_sha3_256'], body_sha3_256))
-            if (json['attachments'] if json else None) != test['attachments']:
+            att = json['attachments'] if json else []
+            att_expected = test['attachments'] or []
+            if att != att_expected:
                 errors += 1
                 sys.stderr.write("""[FAIL] index %u: \nExpected:\n%s\nGot:\n%s\n""" %
-                                 (test['index'], test['attachments'], json['attachments'] if json else None))
+                                 (test['index'], att_expected, att))
             else:
                 print("[PASS] index %u" % (test['index']))
     print("[DONE] %u tests run, %u failed." % (tests_run, errors))
