@@ -46,7 +46,10 @@ def generate_specs(args):
                 json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
             # PM <= 0.12 parameters
             else:
-                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
+                try:
+                    json, _, _, _ = archie.compute_updates(lid, False, message)
+                except ValueError: # PM <= 0.10 only 2 return values
+                    json, _ = archie.compute_updates(lid, False, message)
             gen_spec.append({
                 'index': key,
                 'message-id': message.get('message-id').strip(),
@@ -101,7 +104,10 @@ def run_tests(args):
                     json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
                 # PM <= 0.11 parameters (missing args)
                 else:
-                    json, _, _, _ = archie.compute_updates(lid, False, message)
+                    try:
+                        json, _, _, _ = archie.compute_updates(lid, False, message)
+                    except ValueError: # PM <= 0.10 only 2 return values
+                        json, _ = archie.compute_updates(lid, False, message)
 
                 if json['mid'] != test['generated']:
                     errors += 1
