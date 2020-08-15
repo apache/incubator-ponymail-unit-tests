@@ -42,10 +42,8 @@ def generate_specs(args):
                 json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
             # PM <= 0.11 parameters (missing args)
             else:
-                try:
-                    json, _, _, _ = archie.compute_updates(lid, False, message)
-                except ValueError: # PM <= 0.10 only 2 return values
-                    json, _ = archie.compute_updates(lid, False, message)
+                # May return 2 or 4 values; only want first
+                json = archie.compute_updates(lid, False, message)[0]
             body_sha3_256 = None
             if json and json.get('body') is not None:
                 body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
@@ -95,10 +93,8 @@ def run_tests(args):
                 json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
             # PM <= 0.11 parameters (missing args)
             else:
-                try:
-                    json, _, _, _ = archie.compute_updates(lid, False, message)
-                except ValueError: # PM <= 0.10 only 2 return values
-                    json, _ = archie.compute_updates(lid, False, message)
+                # May return 2 or 4 values; only want first
+                json = archie.compute_updates(lid, False, message)[0]
             body_sha3_256 = None
             if json and json.get('body') is not None:
                 body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
