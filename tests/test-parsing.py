@@ -27,7 +27,7 @@ def generate_specs(args):
             message_raw = mbox.get_bytes(key)  # True raw format, as opposed to calling .as_bytes()
             message = mbox.get(key)
             lid = archiver.normalize_lid(message.get('list-id', '??'))
-            json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+            json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
             body_sha3_256 = None
             if json and json.get('body') is not None:
                 body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
@@ -62,7 +62,7 @@ def run_tests(args):
             message_raw = mbox.get_bytes(test['index'])  # True raw format, as opposed to calling .as_bytes()
             message = mbox.get(test['index'])
             lid = archiver.normalize_lid(message.get('list-id', '??'))
-            json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+            json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
             body_sha3_256 = None
             if json and json.get('body') is not None:
                 body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
