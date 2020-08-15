@@ -9,6 +9,7 @@ import mailbox
 import yaml
 import argparse
 import collections
+import inspect
 
 parse_html = False
 nonce = None
@@ -17,8 +18,12 @@ fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None
 
 def generate_specs(args):
     import archiver
-    import generators
+    try:
+        import generators
+    except:
+        import plugins.generators as generators
     archie = archiver.Archiver(parse_html=parse_html)
+    expected_parameters = inspect.signature(archie.compute_updates).parameters
     yml = {}
     for gen_type in generators.generator_names():
         sys.stderr.write("Generating specs for type '%s'...\n" % gen_type)
@@ -29,7 +34,12 @@ def generate_specs(args):
             message_raw = mbox.get_bytes(key)  # True raw format, as opposed to calling .as_bytes()
             message = mbox.get(key)
             lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
-            json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+            # Foal parameters
+            if 'raw_msg' in expected_parameters:
+                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+            # PM <= 0.12 parameters
+            else:
+                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
             gen_spec.append({
                 'index': key,
                 'message-id': message.get('message-id').strip(),
@@ -43,12 +53,20 @@ def generate_specs(args):
 
 def run_tests(args):
     import archiver
+    try:
+        import generators
+    except:
+        import plugins.generators as generators
     errors = 0
     tests_run = 0
     yml = yaml.safe_load(open(args.load, 'r'))
     for mboxfile, run in yml['generators'].items():
         for gen_type, tests in run.items():
+            if gen_type not in generators.generator_names():
+                sys.stderr.write("Warning: generators.py does not have the '%s' generator, skipping tests\n" % gen_type)
+                continue
             archie = archiver.Archiver(generator=gen_type, parse_html=parse_html)
+            expected_parameters = inspect.signature(archie.compute_updates).parameters
             mbox = mailbox.mbox(mboxfile, None, create=False)
             no_messages = len(mbox.keys())
             no_tests = len(tests)
@@ -60,7 +78,12 @@ def run_tests(args):
                 message_raw = mbox.get_bytes(test['index'])  # True raw format, as opposed to calling .as_bytes()
                 message = mbox.get(test['index'])
                 lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
-                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+                # Foal parameters
+                if 'raw_msg' in expected_parameters:
+                    json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+                # PM <= 0.12 parameters
+                else:
+                    json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
                 if json['mid'] != test['generated']:
                     errors += 1
                     sys.stderr.write("""[FAIL] %s, index %u: Expected '%s', got '%s'!\n""" %

@@ -10,6 +10,7 @@ import yaml
 import argparse
 import collections
 import hashlib
+import inspect
 
 nonce = None
 fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None)
@@ -18,6 +19,7 @@ fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None
 def generate_specs(args):
     import archiver
     archie = archiver.Archiver(parse_html=args.html)
+    expected_parameters = inspect.signature(archie.compute_updates).parameters
     sys.stderr.write("Generating parsing specs for file '%s'...\n" % args.mboxfile)
     items = {}
     for mboxfile in args.mboxfile:
@@ -27,7 +29,12 @@ def generate_specs(args):
             message_raw = mbox.get_bytes(key)  # True raw format, as opposed to calling .as_bytes()
             message = mbox.get(key)
             lid = archiver.normalize_lid(message.get('list-id', '??'))
-            json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+            # Foal parameters
+            if 'raw_msg' in expected_parameters:
+                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+            # PM <= 0.12 parameters
+            else:
+                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
             body_sha3_256 = None
             if json and json.get('body') is not None:
                 body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
@@ -50,6 +57,7 @@ def run_tests(args):
     yml = yaml.safe_load(open(args.load, 'r'))
     parse_html = yml.get('args', {}).get('parse_html', False)
     archie = archiver.Archiver(parse_html=parse_html)
+    expected_parameters = inspect.signature(archie.compute_updates).parameters
     for mboxfile, tests in yml['parsing'].items():
         mbox = mailbox.mbox(mboxfile, None, create=False)
         no_messages = len(mbox.keys())
@@ -62,7 +70,12 @@ def run_tests(args):
             message_raw = mbox.get_bytes(test['index'])  # True raw format, as opposed to calling .as_bytes()
             message = mbox.get(test['index'])
             lid = archiver.normalize_lid(message.get('list-id', '??'))
-            json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+            # Foal parameters
+            if 'raw_msg' in expected_parameters:
+                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
+            # PM <= 0.12 parameters
+            else:
+                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
             body_sha3_256 = None
             if json and json.get('body') is not None:
                 body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
