@@ -100,13 +100,13 @@ def run_tests(args):
                 body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
             if body_sha3_256 != test['body_sha3_256']:
                 errors += 1
-                sys.stderr.write("""[FAIL] index %u: \nExpected:\n%s\nGot:\n%s\n""" %
+                sys.stderr.write("""[FAIL] parsing index %2u: Expected: %s Got: %s\n""" %
                                  (test['index'], test['body_sha3_256'], body_sha3_256))
             att = json['attachments'] if json else []
             att_expected = test['attachments'] or []
             if att != att_expected:
                 errors += 1
-                sys.stderr.write("""[FAIL] index %u: \nExpected:\n%s\nGot:\n%s\n""" %
+                sys.stderr.write("""[FAIL] attachments index %2u: Expected: %s Got: %s\n""" %
                                  (test['index'], att_expected, att))
             else:
                 print("[PASS] index %u" % (test['index']))
