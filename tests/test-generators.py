@@ -107,7 +107,7 @@ def run_tests(args):
 
                 if json['mid'] != test['generated']:
                     errors += 1
-                    sys.stderr.write("""[FAIL] %s, index %u: Expected '%s', got '%s'!\n""" %
+                    sys.stderr.write("""[FAIL] %s, index %2u: Expected '%s', got '%s'!\n""" %
                                      (gen_type, test['index'], test['generated'], json['mid']))
                 else:
                     print("[PASS] %s index %u" % (gen_type, test['index']))
