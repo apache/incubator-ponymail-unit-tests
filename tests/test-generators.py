@@ -44,7 +44,10 @@ def generate_specs(args):
             # Foal parameters
             if 'raw_msg' in expected_compute_parameters:
                 json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
-            # PM <= 0.12 parameters
+            # PM 0.12 parameters
+            elif 'args' in expected_compute_parameters:
+                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
+            # PM <= 0.11 parameters (missing args)
             else:
                 # May return 2 or 4 values; only want first
                 json = archie.compute_updates(lid, False, message)[0]
