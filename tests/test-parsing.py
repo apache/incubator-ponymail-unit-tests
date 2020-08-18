@@ -84,6 +84,11 @@ def run_tests(args):
             tests_run += 1
             message_raw = mbox.get_bytes(test['index'])  # True raw format, as opposed to calling .as_bytes()
             message = mbox.get(test['index'])
+            msgid =(message.get('message-id') or '').strip()
+            if msgid != test['message-id']:
+                sys.stderr.write("""[SEQ?] index %2u: Expected '%s', got '%s'!\n""" %
+                                 (test['index'], test['message-id'], msgid))
+                continue # no point continuing
             lid = archiver.normalize_lid(message.get('list-id', '??'))
             # Foal parameters
             if 'raw_msg' in expected_compute_parameters:
