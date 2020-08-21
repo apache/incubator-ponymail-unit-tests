@@ -44,10 +44,10 @@ jobs:
         cd ..
         python runall.py --root ponymail-0.10
         cd ponymail-0.11
-        sed -e 's/#c ropout:/cropout:' tools/ponymail.cfg.sample >tools/ponymail.cfg
+        sed -e 's/# cropout:/cropout:/' tools/ponymail.cfg.sample >tools/ponymail.cfg
         cd ..
         python runall.py --root ponymail-0.11
         cd ponymail
-        sed -e 's/#c ropout:/cropout:' tools/ponymail.cfg.sample >tools/ponymail.cfg
+        sed -e 's/# cropout:/cropout:/' tools/ponymail.cfg.sample >tools/ponymail.cfg
         cd ..
         python runall.py --root ponymail
