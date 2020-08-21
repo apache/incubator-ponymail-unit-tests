@@ -32,6 +32,6 @@ jobs:
     - name: Test with Ponymail Unit tests
       run: |
         cd ponymail-0.10
-        sed -e 's/#cropout:.*/cropout:                (\w+\.\w+)\.incubator\.apache\.org \1.apache.org/' tools/ponymail.cfg.sample >tools/ponymail.cfg
+        sed -e 's/#cropout:.*/cropout:                (\\w+\\.\\w+)\\.incubator\\.apache\\.org \\1.apache.org/' tools/ponymail.cfg.sample >tools/ponymail.cfg
         cd ..
         python runall.py --root ponymail-0.10
