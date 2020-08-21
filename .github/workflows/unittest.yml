@@ -1,7 +1,6 @@
 name: Test corpus against versions
 
-#on: [push,workflow_dispatch]
-on: workflow_dispatch
+on: [push,workflow_dispatch]
 
 jobs:
   build:
