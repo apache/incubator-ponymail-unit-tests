@@ -31,5 +31,7 @@ jobs:
         pip install -r requirements.txt
     - name: Test with Ponymail Unit tests
       run: |
+        cd ponymail-0.10
         sed -e 's/# cropout:/cropout:/' tools/ponymail.cfg.sample >tools/ponymail.cfg
+        cd ..
         python runall.py --root ponymail-0.10
