@@ -1,5 +1,4 @@
 name: Test corpus against versions
-# start wit 0.10 only
 
 #on: [push,workflow_dispatch]
 on: workflow_dispatch
@@ -21,10 +20,15 @@ jobs:
         repository: apache/incubator-ponymail
         path: ponymail-0.10
         ref: refs/tags/0.10
+    - uses: actions/checkout@master
       with:
         repository: apache/incubator-ponymail
         path: ponymail-0.11
         ref: refs/tags/0.11
+    - uses: actions/checkout@master
+      with:
+        repository: apache/incubator-ponymail
+        path: ponymail
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -43,3 +47,7 @@ jobs:
         sed -e 's/#c ropout:/cropout:' tools/ponymail.cfg.sample >tools/ponymail.cfg
         cd ..
         python runall.py --root ponymail-0.11
+        cd ponymail
+        sed -e 's/#c ropout:/cropout:' tools/ponymail.cfg.sample >tools/ponymail.cfg
+        cd ..
+        python runall.py --root ponymail
