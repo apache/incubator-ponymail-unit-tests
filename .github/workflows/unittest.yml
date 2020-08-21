@@ -29,6 +29,10 @@ jobs:
       with:
         repository: apache/incubator-ponymail
         path: ponymail
+    - uses: actions/checkout@master
+      with:
+        repository: apache/incubator-ponymail-foal
+        path: ponymail-foal
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -51,3 +55,7 @@ jobs:
         sed -e 's/# cropout:/cropout:/' tools/ponymail.cfg.sample >tools/ponymail.cfg
         cd ..
         python runall.py --root ponymail
+        cd ponymail-foal
+        sed -e 's/# cropout:/cropout:/' tools/ponymail.yaml.example >tools/ponymail.yaml
+        cd ..
+        python runall.py --root ponymail-foal
