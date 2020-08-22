@@ -9,7 +9,6 @@ import mailbox
 import yaml
 import argparse
 import collections
-import inspect
 import interfacer
 
 parse_html = False
@@ -23,17 +22,10 @@ def generate_specs(args):
         import generators
     except:
         import plugins.generators as generators
-    expected_archie_parameters = inspect.signature(archiver.Archiver).parameters
-    expected_compute_parameters = inspect.signature(archiver.Archiver.compute_updates).parameters
     yml = {}
     for gen_type in generators.generator_names():
-        # <= 0.11:
-        if 'parseHTML' in expected_archie_parameters:
-            archiver.archiver_generator = gen_type
-            archie = archiver.Archiver(parseHTML=parse_html)
-        # current master and foal
-        else:
-            archie = archiver.Archiver(generator=gen_type, parse_html=parse_html)
+        test_args = collections.namedtuple('testargs', ['parse_html', 'generator'])(parse_html, gen_type)
+        archie = interfacer.Archiver(archiver, test_args)
         sys.stderr.write("Generating specs for type '%s'...\n" % gen_type)
 
         gen_spec = []
@@ -42,16 +34,7 @@ def generate_specs(args):
             message_raw = mbox.get_bytes(key)  # True raw format, as opposed to calling .as_bytes()
             message = mbox.get(key)
             lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
-            # Foal parameters
-            if 'raw_msg' in expected_compute_parameters:
-                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
-            # PM 0.12 parameters
-            elif 'args' in expected_compute_parameters:
-                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
-            # PM <= 0.11 parameters (missing args)
-            else:
-                # May return 2 or 4 values; only want first
-                json = archie.compute_updates(lid, False, message)[0]
+            json = archie.compute_updates(fake_args, lid, False, message, message_raw)
             gen_spec.append({
                 'index': key,
                 'message-id': message.get('message-id').strip(),
