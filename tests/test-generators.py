@@ -72,8 +72,6 @@ def run_tests(args):
     errors = 0
     tests_run = 0
     yml = yaml.safe_load(open(args.load, 'r'))
-    expected_archie_parameters = inspect.signature(archiver.Archiver).parameters
-    expected_compute_parameters = inspect.signature(archiver.Archiver.compute_updates).parameters
     generator_names = generators.generator_names() if hasattr(generators, 'generator_names') else ['full', 'medium', 'cluster', 'legacy']
     for mboxfile, run in yml['generators'].items():
         for gen_type, tests in run.items():
