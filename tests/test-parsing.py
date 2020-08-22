@@ -11,6 +11,7 @@ import argparse
 import collections
 import hashlib
 import inspect
+import interfacer
 
 nonce = None
 fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None)
@@ -60,18 +61,14 @@ def generate_specs(args):
 
 
 def run_tests(args):
-    import archiver
+    import archiver    
     errors = 0
     tests_run = 0
     yml = yaml.safe_load(open(args.load, 'r'))
     parse_html = yml.get('args', {}).get('parse_html', False)
-    expected_archie_parameters = inspect.signature(archiver.Archiver).parameters
-    expected_compute_parameters = inspect.signature(archiver.Archiver.compute_updates).parameters
-    # <= 0.11:
-    if 'parseHTML' in expected_archie_parameters:
-        archie = archiver.Archiver(parseHTML=parse_html)
-    else:
-        archie = archiver.Archiver(parse_html=parse_html)
+
+    test_args = collections.namedtuple('testargs', ['parse_html'])(parse_html)
+    archie = interfacer.Archiver(archiver, test_args)
 
     for mboxfile, tests in yml['parsing'].items():
         mbox = mailbox.mbox(mboxfile, None, create=False)
@@ -90,16 +87,7 @@ def run_tests(args):
                                  (test['index'], test['message-id'], msgid))
                 continue # no point continuing
             lid = archiver.normalize_lid(message.get('list-id', '??'))
-            # Foal parameters
-            if 'raw_msg' in expected_compute_parameters:
-                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
-            # PM 0.12 parameters
-            elif 'args' in expected_compute_parameters:
-                json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
-            # PM <= 0.11 parameters (missing args)
-            else:
-                # May return 2 or 4 values; only want first
-                json = archie.compute_updates(lid, False, message)[0]
+            json = archie.compute_updates(fake_args, lid, False, message, message_raw)
             body_sha3_256 = None
             if json and json.get('body') is not None:
                 body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()

@@ -10,6 +10,7 @@ import yaml
 import argparse
 import collections
 import inspect
+import interfacer
 
 parse_html = False
 nonce = None
@@ -79,13 +80,8 @@ def run_tests(args):
             if gen_type not in generator_names:
                 sys.stderr.write("Warning: generators.py does not have the '%s' generator, skipping tests\n" % gen_type)
                 continue
-            # <= 0.11:
-            if 'parseHTML' in expected_archie_parameters:
-                archiver.archiver_generator = gen_type
-                archie = archiver.Archiver(parseHTML=parse_html)
-            # current master and foal
-            else:
-                archie = archiver.Archiver(generator=gen_type, parse_html=parse_html)
+            test_args = collections.namedtuple('testargs', ['parse_html', 'generator'])(parse_html, gen_type)
+            archie = interfacer.Archiver(archiver, test_args)
             mbox = mailbox.mbox(mboxfile, None, create=False)
             no_messages = len(mbox.keys())
             no_tests = len(tests)
@@ -102,17 +98,8 @@ def run_tests(args):
                                      (gen_type, test['index'], test['message-id'], msgid))
                     continue # no point continuing
                 lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
-                # Foal parameters
-                if 'raw_msg' in expected_compute_parameters:
-                    json, _, _, _ = archie.compute_updates(fake_args, lid, False, message, message_raw)
-                # PM 0.12 parameters
-                elif 'args' in expected_compute_parameters:
-                    json, _, _, _ = archie.compute_updates(fake_args, lid, False, message)
-                # PM <= 0.11 parameters (missing args)
-                else:
-                    # May return 2 or 4 values; only want first
-                    json = archie.compute_updates(lid, False, message)[0]
-
+                json = archie.compute_updates(fake_args, lid, False, message, message_raw)
+    
                 if json['mid'] != test['generated']:
                     errors += 1
                     sys.stderr.write("""[FAIL] %s, index %2u: Expected '%s', got '%s'!\n""" %
