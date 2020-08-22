@@ -17,7 +17,7 @@ class Archiver(object):
             if hasattr(args, 'generator'):
               archiver_.archiver_generator = args.generator
             self.archie = archiver_.Archiver(parseHTML=args.parse_html)
-        # prepare for updated archiver
+        # Foal
         elif 'ignore_body' in self.expected_archie_parameters:
             self.archie = archiver_.Archiver(generator=getattr(args, 'generator', None),
                                              parse_html=args.parse_html,
@@ -38,10 +38,7 @@ class Archiver(object):
             self.compute = self._compute_11
 
     def _compute_foal(self, fake_args, lid, private, message, message_raw):
-        if 'args' in self.expected_compute_parameters: # temporary until foal updated
-            return self.archie.compute_updates(fake_args, lid, private, message, message_raw)[0]
-        else:
-            return self.archie.compute_updates(lid, private, message, message_raw)[0]
+        return self.archie.compute_updates(lid, private, message, message_raw)[0]
 
     def _compute_12(self, fake_args, lid, private, message, message_raw):
         return self.archie.compute_updates(fake_args, lid, private, message)[0]
