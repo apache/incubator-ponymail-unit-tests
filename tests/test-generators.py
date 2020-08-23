@@ -21,10 +21,7 @@ def generate_specs(args):
     try:
         import generators
     except:
-        try:
-            import plugins.generators as generators
-        except:
-            generators=None
+        import plugins.generators as generators
     yml = {}
     generator_names = generators.generator_names() if hasattr(generators, 'generator_names') else ['full', 'medium', 'cluster', 'legacy']
     for gen_type in generator_names:
