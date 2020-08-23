@@ -24,7 +24,8 @@ def generate_specs(args):
         import plugins.generators as generators
     yml = {}
     generator_names = generators.generator_names() if hasattr(generators, 'generator_names') else ['full', 'medium', 'cluster', 'legacy']
-    for gen_type in generator_names:
+    # sort so most recent generators come last to make comparisons easier
+    for gen_type in sorted(generator_names, key=lambda s: s.replace('dkim','zkim')):
         test_args = collections.namedtuple('testargs', ['parse_html', 'generator'])(parse_html, gen_type)
         archie = interfacer.Archiver(archiver, test_args)
         sys.stderr.write("Generating specs for type '%s'...\n" % gen_type)
@@ -43,7 +44,8 @@ def generate_specs(args):
             })
         yml[gen_type] = gen_spec
     with open(args.generate, 'w') as f:
-        yaml.dump({'args': {'cmd': " ".join(sys.argv)}, 'generators': {args.mboxfile: yml}}, f)
+        # don't sort keys here
+        yaml.dump({'args': {'cmd': " ".join(sys.argv)}, 'generators': {args.mboxfile: yml}}, f, sort_keys=False)
         f.close()
 
 
