@@ -21,9 +21,13 @@ def generate_specs(args):
     try:
         import generators
     except:
-        import plugins.generators as generators
+        try:
+            import plugins.generators as generators
+        except:
+            generators=None
     yml = {}
-    for gen_type in generators.generator_names():
+    generator_names = generators.generator_names() if hasattr(generators, 'generator_names') else ['full', 'medium', 'cluster', 'legacy']
+    for gen_type in generator_names:
         test_args = collections.namedtuple('testargs', ['parse_html', 'generator'])(parse_html, gen_type)
         archie = interfacer.Archiver(archiver, test_args)
         sys.stderr.write("Generating specs for type '%s'...\n" % gen_type)
