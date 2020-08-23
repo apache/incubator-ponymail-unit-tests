@@ -42,7 +42,7 @@ def generate_specs(args):
             })
         items[mboxfile] = tests
     with open(args.generate, 'w') as f:
-        yaml.dump({'args': {'cmd': " ".join(sys.argv), 'parse_html': True if args.html else False}, 'parsing': items}, f)
+        yaml.dump({'args': {'cmd': " ".join(sys.argv), 'parse_html': True if args.html else False}, 'parsing': items}, f, sort_keys=False)
         f.close()
 
 
