@@ -18,12 +18,15 @@ fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None
 
 def generate_specs(args):
     import archiver
-    try:
-        import generators
-    except:
-        import plugins.generators as generators
+    if args.generators:
+        generator_names = args.generators
+    else:
+        try:
+            import generators
+        except:
+            import plugins.generators as generators
+        generator_names = generators.generator_names() if hasattr(generators, 'generator_names') else ['full', 'medium', 'cluster', 'legacy']
     yml = {}
-    generator_names = generators.generator_names() if hasattr(generators, 'generator_names') else ['full', 'medium', 'cluster', 'legacy']
     # sort so most recent generators come last to make comparisons easier
     for gen_type in sorted(generator_names, key=lambda s: s.replace('dkim','zkim')):
         test_args = collections.namedtuple('testargs', ['parse_html', 'generator'])(parse_html, gen_type)
@@ -105,6 +108,8 @@ def main():
     parser = argparse.ArgumentParser(description='Command line options.')
     parser.add_argument('--generate', dest='generate', type=str,
                         help='Generate a test yaml spec, output to file specified here')
+    parser.add_argument('--generators', dest='generators', nargs='+', type=str,
+                        help='Override the list of generator names')
     parser.add_argument('--load', dest='load', type=str,
                         help='Load and run tests from a yaml spec file')
     parser.add_argument('--mbox', dest='mboxfile', type=str,
