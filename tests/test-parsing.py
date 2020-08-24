@@ -48,6 +48,11 @@ def generate_specs(args):
 
 def run_tests(args):
     import archiver    
+    import logging
+    verbose_logger = logging.getLogger()
+    verbose_logger.setLevel(logging.WARN)
+    verbose_logger.addHandler(logging.StreamHandler(sys.stderr))
+    archiver.logger = verbose_logger
     errors = 0
     tests_run = 0
     yml = yaml.safe_load(open(args.load, 'r'))
