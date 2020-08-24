@@ -39,7 +39,7 @@ def generate_specs(args):
             json = archie.compute_updates(fake_args, lid, False, message, message_raw)
             gen_spec.append({
                 'index': key,
-                'message-id': message.get('message-id').strip(),
+                'message-id': message.get('message-id','').strip(),
                 'generated': json['mid'],
             })
         yml[gen_type] = gen_spec
