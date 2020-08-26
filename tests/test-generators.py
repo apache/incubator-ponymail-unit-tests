@@ -15,12 +15,23 @@ parse_html = False
 nonce = None
 fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None)
 
+# get raw message, allowing for mboxo translation
+def _raw(args, mbox, key):
+    if args.nomboxo: # No need to filter the data
+        message_raw = mbox.get_bytes(key, True)
+    else:
+        from mboxo_patch import MboxoReader
+        file=mbox.get_file(key, True)
+        file=MboxoReader(file)
+        message_raw=file.read()
+        file.close()
+    return message_raw
 
 def generate_specs(args):
     if not args.nomboxo:
         # Temporary patch to fix Python email package limitation
         # It must be removed when the Python package is fixed
-        from mboxo_patch import MboxoFactory, MboxoReader
+        from mboxo_patch import MboxoFactory
     import archiver
     if args.generators:
         generator_names = args.generators
@@ -40,7 +51,7 @@ def generate_specs(args):
         gen_spec = []
         mbox = mailbox.mbox(args.mboxfile, None if args.nomboxo else MboxoFactory, create=False)
         for key in mbox.keys():
-            message_raw = mbox.get_bytes(key)  # True raw format, as opposed to calling .as_bytes()
+            message_raw = _raw(args, mbox, key)
             message = mbox.get(key)
             lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
             json = archie.compute_updates(fake_args, lid, False, message, message_raw)
@@ -60,7 +71,7 @@ def run_tests(args):
     if not args.nomboxo:
         # Temporary patch to fix Python email package limitation
         # It must be removed when the Python package is fixed
-        from mboxo_patch import MboxoFactory, MboxoReader
+        from mboxo_patch import MboxoFactory
     import archiver
     import logging
     verbose_logger = logging.getLogger()
@@ -91,13 +102,13 @@ def run_tests(args):
                                  (gen_type, mboxfile, no_tests, no_messages))
             for test in tests:
                 tests_run += 1
-                # TODO does get_bytes take account of MboxoFactory?
-                message_raw = mbox.get_bytes(test['index'])  # True raw format, as opposed to calling .as_bytes()
-                message = mbox.get(test['index'])
+                key = test['index']
+                message_raw = _raw(args, mbox, key)
+                message = mbox.get(key)
                 msgid =(message.get('message-id') or '').strip()
                 if msgid != test['message-id']:
                     sys.stderr.write("""[SEQ?] %s, index %2u: Expected '%s', got '%s'!\n""" %
-                                     (gen_type, test['index'], test['message-id'], msgid))
+                                     (gen_type, key, test['message-id'], msgid))
                     continue # no point continuing
                 lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
                 json = archie.compute_updates(fake_args, lid, False, message, message_raw)
@@ -105,9 +116,9 @@ def run_tests(args):
                 if json['mid'] != test['generated']:
                     errors += 1
                     sys.stderr.write("""[FAIL] %s, index %2u: Expected '%s', got '%s'!\n""" %
-                                     (gen_type, test['index'], test['generated'], json['mid']))
+                                     (gen_type, key, test['generated'], json['mid']))
                 else:
-                    print("[PASS] %s index %u" % (gen_type, test['index']))
+                    print("[PASS] %s index %u" % (gen_type, key))
     print("[DONE] %u tests run, %u failed." % (tests_run, errors))
     if errors:
         sys.exit(-1)

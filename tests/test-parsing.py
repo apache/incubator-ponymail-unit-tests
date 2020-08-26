@@ -15,12 +15,23 @@ import interfacer
 nonce = None
 fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None)
 
+# get raw message, allowing for mboxo translation
+def _raw(args, mbox, key):
+    if args.nomboxo: # No need to filter the data
+        message_raw = mbox.get_bytes(key, True)
+    else:
+        from mboxo_patch import MboxoReader
+        file=mbox.get_file(key, True)
+        file=MboxoReader(file)
+        message_raw=file.read()
+        file.close()
+    return message_raw
 
 def generate_specs(args):
     if not args.nomboxo:
         # Temporary patch to fix Python email package limitation
         # It must be removed when the Python package is fixed
-        from mboxo_patch import MboxoFactory, MboxoReader
+        from mboxo_patch import MboxoFactory
     import archiver
     cli_args = collections.namedtuple('testargs', ['parse_html'])(args.html)
     archie = interfacer.Archiver(archiver, cli_args)
@@ -31,7 +42,7 @@ def generate_specs(args):
         tests = []
         mbox = mailbox.mbox(mboxfile, None if args.nomboxo else MboxoFactory, create=False)
         for key in mbox.keys():
-            message_raw = mbox.get_bytes(key)  # True raw format, as opposed to calling .as_bytes()
+            message_raw = _raw(args, mbox, key)
             message = mbox.get(key)
             lid = archiver.normalize_lid(message.get('list-id', '??'))
             json = archie.compute_updates(fake_args, lid, False, message, message_raw)
@@ -54,7 +65,7 @@ def run_tests(args):
     if not args.nomboxo:
         # Temporary patch to fix Python email package limitation
         # It must be removed when the Python package is fixed
-        from mboxo_patch import MboxoFactory, MboxoReader
+        from mboxo_patch import MboxoFactory
     import archiver    
     import logging
     verbose_logger = logging.getLogger()
@@ -78,13 +89,13 @@ def run_tests(args):
                              ('TBA', mboxfile, no_tests, no_messages))
         for test in tests:
             tests_run += 1
-            # TODO does get_bytes take account of MboxoFactory?
-            message_raw = mbox.get_bytes(test['index'])  # True raw format, as opposed to calling .as_bytes()
-            message = mbox.get(test['index'])
+            key = test['index']
+            message_raw = _raw(args, mbox, key)
+            message = mbox.get(key)
             msgid =(message.get('message-id') or '').strip()
             if msgid != test['message-id']:
                 sys.stderr.write("""[SEQ?] index %2u: Expected '%s', got '%s'!\n""" %
-                                 (test['index'], test['message-id'], msgid))
+                                 (key, test['message-id'], msgid))
                 continue # no point continuing
             lid = archiver.normalize_lid(message.get('list-id', '??'))
             json = archie.compute_updates(fake_args, lid, False, message, message_raw)
@@ -94,15 +105,15 @@ def run_tests(args):
             if body_sha3_256 != test['body_sha3_256']:
                 errors += 1
                 sys.stderr.write("""[FAIL] parsing index %2u: Expected: %s Got: %s\n""" %
-                                 (test['index'], test['body_sha3_256'], body_sha3_256))
+                                 (key, test['body_sha3_256'], body_sha3_256))
             att = json['attachments'] if json else []
             att_expected = test['attachments'] or []
             if att != att_expected:
                 errors += 1
                 sys.stderr.write("""[FAIL] attachments index %2u: Expected: %s Got: %s\n""" %
-                                 (test['index'], att_expected, att))
+                                 (key, att_expected, att))
             else:
-                print("[PASS] index %u" % (test['index']))
+                print("[PASS] index %u" % (key))
     print("[DONE] %u tests run, %u failed." % (tests_run, errors))
     if errors:
         sys.exit(-1)
