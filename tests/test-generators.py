@@ -17,6 +17,10 @@ fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None
 
 
 def generate_specs(args):
+    if not args.nomboxo:
+        # Temporary patch to fix Python email package limitation
+        # It must be removed when the Python package is fixed
+        from mboxo_patch import MboxoFactory, MboxoReader
     import archiver
     if args.generators:
         generator_names = args.generators
@@ -34,7 +38,7 @@ def generate_specs(args):
         sys.stderr.write("Generating specs for type '%s'...\n" % gen_type)
 
         gen_spec = []
-        mbox = mailbox.mbox(args.mboxfile, None, create=False)
+        mbox = mailbox.mbox(args.mboxfile, None if args.nomboxo else MboxoFactory, create=False)
         for key in mbox.keys():
             message_raw = mbox.get_bytes(key)  # True raw format, as opposed to calling .as_bytes()
             message = mbox.get(key)
@@ -53,6 +57,10 @@ def generate_specs(args):
 
 
 def run_tests(args):
+    if not args.nomboxo:
+        # Temporary patch to fix Python email package limitation
+        # It must be removed when the Python package is fixed
+        from mboxo_patch import MboxoFactory, MboxoReader
     import archiver
     import logging
     verbose_logger = logging.getLogger()
@@ -75,7 +83,7 @@ def run_tests(args):
                 continue
             test_args = collections.namedtuple('testargs', ['parse_html', 'generator'])(parse_html, gen_type)
             archie = interfacer.Archiver(archiver, test_args)
-            mbox = mailbox.mbox(mboxfile, None, create=False)
+            mbox = mailbox.mbox(mboxfile, None if args.nomboxo else MboxoFactory, create=False)
             no_messages = len(mbox.keys())
             no_tests = len(tests)
             if no_messages != no_tests:
@@ -83,6 +91,7 @@ def run_tests(args):
                                  (gen_type, mboxfile, no_tests, no_messages))
             for test in tests:
                 tests_run += 1
+                # TODO does get_bytes take account of MboxoFactory?
                 message_raw = mbox.get_bytes(test['index'])  # True raw format, as opposed to calling .as_bytes()
                 message = mbox.get(test['index'])
                 msgid =(message.get('message-id') or '').strip()
@@ -118,6 +127,8 @@ def main():
                         help='List-ID header override if needed')
     parser.add_argument('--rootdir', dest='rootdir', type=str, required=True,
                         help="Root directory of Apache Pony Mail")
+    parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
+                        help = 'Skip Mboxo processing')
     args = parser.parse_args()
 
     if args.rootdir:

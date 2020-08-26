@@ -15,6 +15,8 @@ if __name__ == '__main__':
                         help="Root directory of Apache Pony Mail")
     parser.add_argument('--load', dest='load', type=str, nargs='+',
                         help="Load only specific yaml spec files instead of all test specs")
+    parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
+                        help = 'Skip Mboxo processing')
     parser.add_argument('--fof', dest='failonfail', action='store_true',
                         help="Stop running more tests if an error is encountered")
     args = parser.parse_args()
@@ -41,7 +43,10 @@ if __name__ == '__main__':
                 tests_total += 1
                 print("Running '%s' tests from %s..." % (test_type, spec_file))
                 try:
-                    rv = subprocess.check_output((PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file))
+                    if args.nomboxo:
+                        rv = subprocess.check_output((PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file, '--nomboxo'))
+                    else:
+                        rv = subprocess.check_output((PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file))
                     tests_success += 1
                 except subprocess.CalledProcessError as e:
                     rv = e.output
