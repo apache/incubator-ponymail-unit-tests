@@ -124,7 +124,6 @@ def main():
                         help = 'Skip Mboxo processing')
     args = parser.parse_args()
 
-    print(args.nomboxo,file=sys.stderr)
     if args.rootdir:
         tools_dir = os.path.join(args.rootdir, 'tools')
     else:
