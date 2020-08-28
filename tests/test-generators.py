@@ -148,6 +148,13 @@ def main():
         tools_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..', "tools")
     sys.path.append(tools_dir)
 
+    if os.environ.get('MOCK_GMTIME'):
+        import time
+        save_gmtime = time.gmtime
+        def _time_gmtime(secs=None):
+            return save_gmtime(secs or 0)
+        time.gmtime = _time_gmtime
+    
     if args.generate:
         if not args.mboxfile:
             sys.stderr.write("Generating a test spec requires an mbox filepath passed with --mbox!\n")

@@ -18,3 +18,9 @@ CLI args for `runall.py`:
 - `--fof`: Fail if one test fails, exiting the suite
 - `--load [filename]`: Only load a specific yaml test specification, don't run all tests
 
+Environment variables:
+- `PYTHONHASHSEED=0`: this ensures that Sets etc return their entries in a deterministic order
+- `MOCK_GMTIME=0`: override time.gmtime() to use the value '0' if none is provided
+  
+The above variables are useful for some tests to ensure reproducability.
+However using them may mask bugs in the code, so they should only be used where necessary.
