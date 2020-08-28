@@ -15,16 +15,20 @@ if __name__ == '__main__':
                         help="Root directory of Apache Pony Mail")
     parser.add_argument('--load', dest='load', type=str, nargs='+',
                         help="Load only specific yaml spec files instead of all test specs")
+    parser.add_argument('--yamldir', dest='yamldir', type=str, action='store',
+                        help="Load yaml specs from alternate directory")    
     parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
                         help = 'Skip Mboxo processing')
     parser.add_argument('--fof', dest='failonfail', action='store_true',
                         help="Stop running more tests if an error is encountered")
     args = parser.parse_args()
 
+    yamldir = args.yamldir or "yaml"
+
     if args.load:
         spec_files = args.load
     else:
-        spec_files = [os.path.join('yaml', x) for x in os.listdir('yaml') if x.endswith('.yaml')]
+        spec_files = [os.path.join(yamldir, x) for x in os.listdir(yamldir) if x.endswith('.yaml')]
 
     tests_success = 0
     tests_failure = 0
@@ -37,16 +41,22 @@ if __name__ == '__main__':
     for spec_file in spec_files:
         with open(spec_file, 'r') as f:
             yml = yaml.safe_load(f)
+            env = None # Environment variable override, e.g. MOCK_GMTIME
             for test_type in yml:
                 if test_type == 'args':
+                    env = yml[test_type].get("env", None)
                     continue
                 tests_total += 1
                 print("Running '%s' tests from %s..." % (test_type, spec_file))
                 try:
                     if args.nomboxo:
-                        rv = subprocess.check_output((PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file, '--nomboxo'))
+                        rv = subprocess.check_output(
+                                (PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file, '--nomboxo'),
+                                 env=env)
                     else:
-                        rv = subprocess.check_output((PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file))
+                        rv = subprocess.check_output(
+                                (PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file),
+                                 env=env)
                     tests_success += 1
                 except subprocess.CalledProcessError as e:
                     rv = e.output
