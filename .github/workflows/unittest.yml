@@ -40,27 +40,37 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Ponymail 0.10
+    - name: Ponymail 0.10 init
       run: |
         cd ponymail-0.10
         sed -e 's/#cropout:.*/cropout:                (\\w+\\.\\w+)\\.incubator\\.apache\\.org \\1.apache.org/' tools/ponymail.cfg.sample >tools/ponymail.cfg
-        cd ..
+    - name: Ponymail 0.10 Test main
+      run: |
         python runall.py --root ponymail-0.10
-    - name: Ponymail 0.11
+    - name: Ponymail 0.11 Init
       run: |
         cd ponymail-0.11
         sed -e 's/# cropout:/cropout:/' tools/ponymail.cfg.sample >tools/ponymail.cfg
-        cd ..
+    - name: Ponymail 0.11 Test main
+      run: |
         python runall.py --root ponymail-0.11
-    - name: Ponymail current
+    - name: Ponymail init
       run: |
         cd ponymail
         sed -e 's/# cropout:/cropout:/' tools/ponymail.cfg.sample >tools/ponymail.cfg
-        cd ..
+    - name: Ponymail Test main
+      run: |
         python runall.py --root ponymail
-    - name: Ponymail Foal
+    - name: Foal init
       run: |
         cd ponymail-foal
         sed -e 's/# cropout:/cropout:/' tools/ponymail.yaml.example >tools/ponymail.yaml
-        cd ..
+    - name: Foal Test main
+      run: |
         python runall.py --root ponymail-foal
+    - name: Ponymail Test set01
+      run: |
+        python runall.py --root ponymail --yamldir yaml/set01
+    - name: Foal Test set02
+      run: |
+        python runall.py --root ponymail-foal --yamldir yaml/set02
