@@ -2,6 +2,8 @@
 """
 Simple tool for collating multiple mbox files into a single one, sorted by message ID.
 Used for multi-import tests where you wish to check that multiple sources give the same ID
+
+WARNING: emails without a Message-ID are currently silently dropped
 """
 import mailbox
 import sys
