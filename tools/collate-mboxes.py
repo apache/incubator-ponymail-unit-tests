@@ -23,7 +23,6 @@ for msgfile in msgfiles:
     )
     for key in messages.iterkeys():
         message = messages.get(key)
-        print(message.get_from())
         msgid = message.get('message-id')
         if msgid:
             sortkey = msgid.strip()
