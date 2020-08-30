@@ -13,6 +13,7 @@ msgfiles = sys.argv[2:] # multiple input files allowed
 
 allmessages = {}
 noid = 0
+dupes = 0
 crlf = None # assume that all emails have the same EOL
 for msgfile in msgfiles:
     messages = mailbox.mbox(
@@ -30,6 +31,9 @@ for msgfile in msgfiles:
                 crlf = (message_raw.endswith(b'\r\n'))
             message_raw += file.read()
             file.close()
+            if msgid in allmessages:
+                print("Duplicate message id: %s" % msgid)
+                dupes += 1
             allmessages[msgid] = message_raw
         else:
             print("No message id: ", message.get_from())
@@ -46,4 +50,4 @@ with open(outmbox, "wb") as f:
             f.write(b'\n')
         nw += 1
 
-print("Wrote %u emails to %s with CRLF %s (%u skipped)" % (nw, outmbox, crlf, noid))
+print("Wrote %u emails to %s with CRLF %s (%u skipped, %u dupes)" % (nw, outmbox, crlf, noid, dupes))
