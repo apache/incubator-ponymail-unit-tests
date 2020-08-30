@@ -13,6 +13,7 @@ msgfiles = sys.argv[2:] # multiple input files allowed
 
 allmessages = {}
 noid = 0
+crlf = None # assume that all emails have the same EOL
 for msgfile in msgfiles:
     messages = mailbox.mbox(
         msgfile, None, create=False
@@ -22,27 +23,27 @@ for msgfile in msgfiles:
         msgid = message.get('message-id')
         if msgid:
             msgid = msgid.strip()
-            allmessages[msgid] = key
+            file = messages.get_file(key, True)
+            message_raw = b''
+            if crlf is None:
+                message_raw = file.readline()
+                crlf = (message_raw.endswith(b'\r\n'))
+            message_raw += file.read()
+            file.close()
+            allmessages[msgid] = message_raw
         else:
             print("No message id: ", message.get_from())
             noid += 1
 
 
 nw = 0
-crlf = None # assume that all emails have the same EOL
 with open(outmbox, "wb") as f:
     for key in sorted(allmessages.keys()):
-        file=messages.get_file(allmessages[key], True)
-        if crlf is None:
-            from_ = file.readline()
-            f.write(from_)
-            crlf = (from_.endswith(b'\r\n'))
-        f.write(file.read())
+        f.write(allmessages[key])
         if crlf:
             f.write(b'\r\n')
         else:
             f.write(b'\n')
-        file.close()
         nw += 1
 
 print("Wrote %u emails to %s with CRLF %s (%u skipped)" % (nw, outmbox, crlf, noid))
