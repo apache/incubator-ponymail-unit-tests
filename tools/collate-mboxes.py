@@ -4,7 +4,7 @@ Simple tool for collating multiple mbox files into a single one, sorted by messa
 If the message-ID is missing, use the Date or Subject and prefix the sort key to appear last.
 
 Can optionally sort by ezmlm number.
-This should be less likely to make missing numbers or duplicate entries.
+This should be less likely to have missing numbers or duplicate entries.
 However duplicates can occur in archive files if:
 - the sequence number was reset at any point
 - multiple mailing lists were merged
