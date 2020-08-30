@@ -3,7 +3,6 @@ args:
     gen-maven-dev-2017-11-mboxvm_ponymail.yaml --root ../ponymail
   env:
     MOCK_GMTIME: "0"
-    PYTHONHASHSEED: "0"
 generators:
   corpus/maven-dev-2017-11-mboxvm.mbox:
     cluster:

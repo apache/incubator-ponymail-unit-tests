@@ -2,8 +2,6 @@ args:
   cmd: tests/test-parsing.py --mbox corpus/maven-dev-2017-11-listsao.mbox --generate
     par-maven-dev-2017-11-listsao_ponymail.yaml --root ../ponymail
   parse_html: false
-  env:
-    PYTHONHASHSEED: "0"
 parsing:
   corpus/maven-dev-2017-11-listsao.mbox:
   - index: 0
