@@ -41,10 +41,14 @@ if __name__ == '__main__':
     for spec_file in spec_files:
         with open(spec_file, 'r') as f:
             yml = yaml.safe_load(f)
-            env = None # Environment variable override, e.g. MOCK_GMTIME
+            env = os.environ # always pass parent environ
             for test_type in yml:
                 if test_type == 'args':
-                    env = yml[test_type].get("env", None)
+                     # Environment variable override, e.g. MOCK_GMTIME
+                    env_ = yml[test_type].get("env", None)
+                    if env_:
+                        for key, val in env_.items():
+                            env[key] = val
                     continue
                 tests_total += 1
                 print("Running '%s' tests from %s..." % (test_type, spec_file))
