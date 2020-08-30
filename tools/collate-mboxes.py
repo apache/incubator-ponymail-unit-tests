@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """
 Simple tool for collating multiple mbox files into a single one, sorted by message ID.
+If the message-ID is missing, use the Date or Subject and prefix the sort key to appear last.
+
 Used for multi-import tests where you wish to check that multiple sources give the same ID
 
-WARNING: emails without a Message-ID are currently dropped
+Emails with duplicate sort keys are logged and dropped
 """
 import mailbox
 import sys
@@ -21,6 +23,7 @@ for msgfile in msgfiles:
     )
     for key in messages.iterkeys():
         message = messages.get(key)
+        print(message.get_from())
         msgid = message.get('message-id')
         if msgid:
             sortkey = msgid.strip()
