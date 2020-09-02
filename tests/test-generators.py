@@ -87,38 +87,46 @@ def run_tests(args):
     tests_run = 0
     yml = yaml.safe_load(open(args.load, 'r'))
     generator_names = generators.generator_names() if hasattr(generators, 'generator_names') else ['full', 'medium', 'cluster', 'legacy']
-    for mboxfile, run in yml['generators'].items():
+    mboxfiles = []
+    for file, run in yml['generators'].items():
+        mboxfiles.append(file)
+        if not run: # No tests under this filename, run same tests as next
+            continue
         for gen_type, tests in run.items():
             if gen_type not in generator_names:
                 sys.stderr.write("Warning: generators.py does not have the '%s' generator, skipping tests\n" % gen_type)
                 continue
             test_args = collections.namedtuple('testargs', ['parse_html', 'generator'])(parse_html, gen_type)
             archie = interfacer.Archiver(archiver, test_args)
-            mbox = mailbox.mbox(mboxfile, None if args.nomboxo else MboxoFactory, create=False)
-            no_messages = len(mbox.keys())
-            no_tests = len(tests)
-            if no_messages != no_tests:
-                sys.stderr.write("Warning: %s run for %s contains %u tests, but mbox file has %u emails!\n" %
-                                 (gen_type, mboxfile, no_tests, no_messages))
-            for test in tests:
-                tests_run += 1
-                key = test['index']
-                message_raw = _raw(args, mbox, key)
-                message = mbox.get(key)
-                msgid =(message.get('message-id') or '').strip()
-                if msgid != test['message-id']:
-                    sys.stderr.write("""[SEQ?] %s, index %2u: Expected '%s', got '%s'!\n""" %
-                                     (gen_type, key, test['message-id'], msgid))
-                    continue # no point continuing
-                lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
-                json = archie.compute_updates(fake_args, lid, False, message, message_raw)
-    
-                if json['mid'] != test['generated']:
-                    errors += 1
-                    sys.stderr.write("""[FAIL] %s, index %2u: Expected '%s', got '%s'!\n""" %
-                                     (gen_type, key, test['generated'], json['mid']))
-                else:
-                    print("[PASS] %s index %u" % (gen_type, key))
+            while len(mboxfiles) > 0:
+                mboxfile = mboxfiles.pop(0)
+                sys.stderr.write("Starting to process %s\n" % mboxfile)
+                mbox = mailbox.mbox(mboxfile, None if args.nomboxo else MboxoFactory, create=False)
+                no_messages = len(mbox.keys())
+                no_tests = len(tests)
+                if no_messages != no_tests:
+                    sys.stderr.write("Warning: %s run for %s contains %u tests, but mbox file has %u emails!\n" %
+                                    (gen_type, mboxfile, no_tests, no_messages))
+                for test in tests:
+                    tests_run += 1
+                    key = test['index']
+                    message_raw = _raw(args, mbox, key)
+                    message = mbox.get(key)
+                    msgid =(message.get('message-id') or '').strip()
+                    if msgid != test['message-id']:
+                        sys.stderr.write("""[SEQ?] %s, index %2u: Expected '%s', got '%s'!\n""" %
+                                        (gen_type, key, test['message-id'], msgid))
+                        continue # no point continuing
+                    lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
+                    json = archie.compute_updates(fake_args, lid, False, message, message_raw)
+
+                    if json['mid'] != test['generated']:
+                        errors += 1
+                        sys.stderr.write("""[FAIL] %s, index %2u: Expected '%s', got '%s'!\n""" %
+                                        (gen_type, key, test['generated'], json['mid']))
+                    else:
+                        print("[PASS] %s index %u" % (gen_type, key))
+        mboxfiles = [] # reset for the next set of tests
     print("[DONE] %u tests run, %u failed." % (tests_run, errors))
     if errors:
         sys.exit(-1)

@@ -80,40 +80,48 @@ def run_tests(args):
     test_args = collections.namedtuple('testargs', ['parse_html'])(parse_html)
     archie = interfacer.Archiver(archiver, test_args)
 
-    for mboxfile, tests in yml['parsing'].items():
-        mbox = mailbox.mbox(mboxfile, None if args.nomboxo else MboxoFactory, create=False)
-        no_messages = len(mbox.keys())
-        no_tests = len(tests)
-        if no_messages != no_tests:
-            sys.stderr.write("Warning: %s run for parsing test of %s contains %u tests, but mbox file has %u emails!\n" %
-                             ('TBA', mboxfile, no_tests, no_messages))
-        for test in tests:
-            tests_run += 1
-            key = test['index']
-            message_raw = _raw(args, mbox, key)
-            message = mbox.get(key)
-            msgid =(message.get('message-id') or '').strip()
-            if msgid != test['message-id']:
-                sys.stderr.write("""[SEQ?] index %2u: Expected '%s', got '%s'!\n""" %
-                                 (key, test['message-id'], msgid))
-                continue # no point continuing
-            lid = archiver.normalize_lid(message.get('list-id', '??'))
-            json = archie.compute_updates(fake_args, lid, False, message, message_raw)
-            body_sha3_256 = None
-            if json and json.get('body') is not None:
-                body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
-            if body_sha3_256 != test['body_sha3_256']:
-                errors += 1
-                sys.stderr.write("""[FAIL] parsing index %2u: Expected: %s Got: %s\n""" %
-                                 (key, test['body_sha3_256'], body_sha3_256))
-            att = json['attachments'] if json else []
-            att_expected = test['attachments'] or []
-            if att != att_expected:
-                errors += 1
-                sys.stderr.write("""[FAIL] attachments index %2u: Expected: %s Got: %s\n""" %
-                                 (key, att_expected, att))
-            else:
-                print("[PASS] index %u" % (key))
+    mboxfiles = []
+
+    for file, tests in yml['parsing'].items():
+        mboxfiles.append(file)
+        if not tests: # No tests under this filename, run same tests as next
+            continue
+        for mboxfile in mboxfiles:
+            sys.stderr.write("Starting to process %s\n" % mboxfile)
+            mbox = mailbox.mbox(mboxfile, None if args.nomboxo else MboxoFactory, create=False)
+            no_messages = len(mbox.keys())
+            no_tests = len(tests)
+            if no_messages != no_tests:
+                sys.stderr.write("Warning: %s run for parsing test of %s contains %u tests, but mbox file has %u emails!\n" %
+                                ('TBA', mboxfile, no_tests, no_messages))
+            for test in tests:
+                tests_run += 1
+                key = test['index']
+                message_raw = _raw(args, mbox, key)
+                message = mbox.get(key)
+                msgid =(message.get('message-id') or '').strip()
+                if msgid != test['message-id']:
+                    sys.stderr.write("""[SEQ?] index %2u: Expected '%s', got '%s'!\n""" %
+                                    (key, test['message-id'], msgid))
+                    continue # no point continuing
+                lid = archiver.normalize_lid(message.get('list-id', '??'))
+                json = archie.compute_updates(fake_args, lid, False, message, message_raw)
+                body_sha3_256 = None
+                if json and json.get('body') is not None:
+                    body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
+                if body_sha3_256 != test['body_sha3_256']:
+                    errors += 1
+                    sys.stderr.write("""[FAIL] parsing index %2u: Expected: %s Got: %s\n""" %
+                                    (key, test['body_sha3_256'], body_sha3_256))
+                att = json['attachments'] if json else []
+                att_expected = test['attachments'] or []
+                if att != att_expected:
+                    errors += 1
+                    sys.stderr.write("""[FAIL] attachments index %2u: Expected: %s Got: %s\n""" %
+                                    (key, att_expected, att))
+                else:
+                    print("[PASS] index %u" % (key))
+        mboxfiles = []
     print("[DONE] %u tests run, %u failed." % (tests_run, errors))
     if errors:
         sys.exit(-1)
