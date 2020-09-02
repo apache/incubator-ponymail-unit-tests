@@ -46,14 +46,14 @@ jobs:
         sed -e 's/#cropout:.*/cropout:                (\\w+\\.\\w+)\\.incubator\\.apache\\.org \\1.apache.org/' tools/ponymail.cfg.sample >tools/ponymail.cfg
     - name: Ponymail 0.10 Test main
       run: |
-        python runall.py --root ponymail-0.10
+        PYTHONHASHSEED=0 python runall.py --root ponymail-0.10
     - name: Ponymail 0.11 Init
       run: |
         cd ponymail-0.11
         sed -e 's/# cropout:/cropout:/' tools/ponymail.cfg.sample >tools/ponymail.cfg
     - name: Ponymail 0.11 Test main
       run: |
-        python runall.py --root ponymail-0.11
+        PYTHONHASHSEED=0 python runall.py --root ponymail-0.11
     - name: Ponymail init
       run: |
         cd ponymail
