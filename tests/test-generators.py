@@ -158,9 +158,16 @@ def main():
 
     if os.environ.get('MOCK_GMTIME'):
         import time
+        import traceback
         save_gmtime = time.gmtime
         def _time_gmtime(secs=None):
-            return save_gmtime(secs or 0)
+            if secs is None:
+                callers = traceback.extract_stack(limit=1)
+                [filename, _, _, _] = callers[0]
+                if filename.endswith("/tools/archiver.py"):
+                    return save_gmtime(0)
+            return save_gmtime(secs)
+
         time.gmtime = _time_gmtime
     
     if args.generate:
