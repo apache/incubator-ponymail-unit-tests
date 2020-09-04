@@ -2,8 +2,6 @@ args:
   cmd: tests/test-parsing.py --mbox corpus/maven-dev-2017-11-mboxvm.mbox --generate
     par-maven-dev-2017-11-mboxvm_pmfoal.yaml --root ../pmfoal
   parse_html: false
-  env:
-    PYTHONHASHSEED: "0"
 parsing:
   corpus/maven-dev-2017-11-mboxvm.mbox:
   - index: 0
