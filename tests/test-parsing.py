@@ -18,7 +18,9 @@ fake_args = collections.namedtuple('fakeargs', ['verbose', 'ibody'])(False, None
 # get raw message, allowing for mboxo translation
 def _raw(args, mbox, key):
     if args.nomboxo: # No need to filter the data
-        message_raw = mbox.get_bytes(key, True)
+        file=mbox.get_file(key, True)
+        message_raw=file.read()
+        file.close()
     else:
         from mboxo_patch import MboxoReader
         file=mbox.get_file(key, True)
