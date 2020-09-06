@@ -110,7 +110,8 @@ def run_tests(args):
                 json = archie.compute_updates(fake_args, lid, False, message, message_raw)
                 body_sha3_256 = None
                 if json and json.get('body') is not None:
-                    body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
+                    if not json.get('html_source_only'):
+                        body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
                 if body_sha3_256 != test['body_sha3_256']:
                     errors += 1
                     sys.stderr.write("""[FAIL] parsing index %2u: Expected: %s Got: %s\n""" %
