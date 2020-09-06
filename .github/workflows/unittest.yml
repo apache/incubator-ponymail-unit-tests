@@ -68,15 +68,3 @@ jobs:
     - name: Foal Test main
       run: |
         python runall.py --root ponymail-foal
-    - name: Ponymail Test set01
-      run: |
-        python runall.py --root ponymail --yamldir yaml/set01
-    - name: Foal Test set02
-      run: |
-        python runall.py --root ponymail-foal --yamldir yaml/set02
-    - name: Ponymail v0.11 Test set01
-      run: |
-        PYTHONHASHSEED=0 python runall.py --root ponymail-0.11 --yamldir yaml/set01
-    - name: Ponymail v0.10 Test set01
-      run: |
-        PYTHONHASHSEED=0 python runall.py --root ponymail-0.10 --yamldir yaml/set01
