@@ -112,10 +112,12 @@ def run_tests(args):
                 if json and json.get('body') is not None:
                     if not json.get('html_source_only'):
                         body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
-                if body_sha3_256 != test['body_sha3_256']:
+                expected = test['body_sha3_256']
+                alternate = test.get('alternate')
+                if body_sha3_256 != expected and body_sha3_256 != alternate:
                     errors += 1
                     sys.stderr.write("""[FAIL] parsing index %2u: Expected: %s Got: %s\n""" %
-                                    (key, test['body_sha3_256'], body_sha3_256))
+                                    (key, expected, body_sha3_256))
                 att = json['attachments'] if json else []
                 att_expected = test['attachments'] or []
                 if att != att_expected:

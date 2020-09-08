@@ -24,3 +24,10 @@ Environment variables:
   
 The above variables are useful for some tests to ensure reproducability.
 However using them may mask bugs in the code, so they should only be used where necessary.
+
+Alternate values for some tests
+===============================
+Version 0.10 of Ponymail never detects format=flowed mails.
+This is because the content-type entry was not set up in msg_metadata
+As a consequence, some mails will be parsed differently.
+The test scripts allow for an alternate value for some tests.

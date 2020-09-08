@@ -122,10 +122,13 @@ def run_tests(args):
                     lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
                     json = archie.compute_updates(fake_args, lid, False, message, message_raw)
 
-                    if json['mid'] != test['generated']:
+                    expected = test['generated']
+                    alternate = test.get('alternate') # alternate value for v0.10
+                    actual = json['mid']
+                    if actual != expected and actual != alternate:
                         errors += 1
                         sys.stderr.write("""[FAIL] %s, index %2u: Expected '%s', got '%s'!\n""" %
-                                        (gen_type, key, test['generated'], json['mid']))
+                                        (gen_type, key, expected, actual))
                     else:
                         print("[PASS] %s index %u" % (gen_type, key))
         mboxfiles = [] # reset for the next set of tests
