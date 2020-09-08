@@ -2,6 +2,26 @@
 
 """
 This is a wrapper to standardise the API for different versions
+
+Foal:
+    def __init__(
+        self, generator=None, parse_html=False, ignore_body=None, verbose=False
+    ):
+
+    def compute_updates(self, lid, private, msg, raw_msg):
+
+Ponymail 12:
+    def __init__(
+        self, generator=None, parse_html=False, ignore_body=None, dump_dir=None, verbose=False, skipff=False
+    ):
+
+    def compute_updates(self, lid, private, msg):
+
+0.11, 0.10:
+    def __init__(self, parseHTML=False):
+
+    def compute_updates(self, lid, private, msg):
+
 """
 
 import sys
@@ -17,16 +37,16 @@ class Archiver(object):
             if hasattr(args, 'generator'):
               archiver_.archiver_generator = args.generator
             self.archie = archiver_.Archiver(parseHTML=args.parse_html)
-        # Foal
-        elif 'ignore_body' in self.expected_archie_parameters:
+        # Ponymail 12+
+        elif 'skipff' in self.expected_archie_parameters:
+            self.archie = archiver_.Archiver(generator=getattr(args, 'generator', None),
+                                             parse_html=args.parse_html,
+                                             ignore_body=None,  # To be provided later
+                                             skipff=True)
+        else: # Foal
             self.archie = archiver_.Archiver(generator=getattr(args, 'generator', None),
                                              parse_html=args.parse_html,
                                              ignore_body=None) # To be provided later
-        else: # 0.12+
-            if hasattr(args, 'generator'):
-                self.archie = archiver_.Archiver(generator=args.generator, parse_html=args.parse_html)
-            else:
-                self.archie = archiver_.Archiver(parse_html=args.parse_html)
 
         if 'raw_msg' in self.expected_compute_parameters:
           self.compute = self._compute_foal
