@@ -51,7 +51,8 @@ if __name__ == '__main__':
                             env[key] = val
                     continue
                 tests_total += 1
-                print("Running '%s' tests from %s..." % (test_type, spec_file))
+                # Use stderr so appears in correct sequence in logs
+                print("Running '%s' tests from %s..." % (test_type, spec_file), file=sys.stderr)
                 try:
                     if args.nomboxo:
                         rv = subprocess.check_output(
@@ -64,7 +65,7 @@ if __name__ == '__main__':
                     tests_success += 1
                 except subprocess.CalledProcessError as e:
                     rv = e.output
-                    print("%s test from %s failed with code %d" % (test_type, spec_file, e.returncode))
+                    print("%s test from %s failed with code %d" % (test_type, spec_file, e.returncode), file=sys.stderr)
                     tests_failure += 1
                     if args.failonfail:
                         failbreak = True
@@ -78,6 +79,7 @@ if __name__ == '__main__':
         if failbreak:
             break
 
+    # No need for stderr at end of run
     print("-------------------------------------")
     print("Done with %u specification%s in %.2f seconds" % (tests_total, 's' if tests_total != 1 else '', time.time() - now))
     print("Specs processed: %4u" % tests_total)
