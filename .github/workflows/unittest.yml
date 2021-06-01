@@ -53,6 +53,7 @@ jobs:
         cd ponymail
         sed -e 's/# cropout:/cropout:/' tools/ponymail.cfg.sample >tools/ponymail.cfg
     - name: Ponymail Test main
+      if: always()
       run: |
         python runall.py --root ponymail
     - name: Foal init
@@ -61,6 +62,7 @@ jobs:
         cd ponymail-foal
         sed -e 's/# cropout:/cropout:/' tools/ponymail.yaml.example >tools/ponymail.yaml
     - name: Foal Test main
+      if: always()
       run: |
         python runall.py --root ponymail-foal
     - name: Ponymail 0.10 init
@@ -69,5 +71,6 @@ jobs:
         cd ponymail-0.10
         sed -e 's/#cropout:.*/cropout:                (\\w+\\.\\w+)\\.incubator\\.apache\\.org \\1.apache.org/' tools/ponymail.cfg.sample >tools/ponymail.cfg
     - name: Ponymail 0.10 Test main
+      if: always()
       run: |
         PYTHONHASHSEED=0 python runall.py --root ponymail-0.10
