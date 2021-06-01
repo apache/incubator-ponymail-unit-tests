@@ -57,11 +57,15 @@ def generate_specs(args):
             message = mbox.get(key)
             lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
             json = archie.compute_updates(fake_args, lid, False, message, message_raw)
-            gen_spec.append({
-                'index': key,
-                'message-id': message.get('message-id','').strip(),
-                'generated': json['mid'],
-            })
+            mid = message.get('message-id','').strip()
+            if json:
+                gen_spec.append({
+                    'index': key,
+                    'message-id': mid,
+                    'generated': json['mid'],
+                })
+            else:
+                print("Cannot parse index %d: %s" % (key, mid))
         yml[gen_type] = gen_spec
     with open(args.generate, 'w') as f:
         # don't sort keys here
