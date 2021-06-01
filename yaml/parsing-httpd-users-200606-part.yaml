@@ -1,0 +1,54 @@
+args:
+  cmd: tests/test-parsing.py --generate parsing-httpd-users-200606-part.yaml --mbox corpus/httpd-users-200606-part.mbox
+    --rootdir ../ponymail/
+  parse_html: false
+parsing:
+  corpus/httpd-users-200606-part.mbox:
+  - index: 0
+    message-id: <BAY103-F28070ECF509B48E8F10ECEC2910@phx.gbl>
+    body_sha3_256: 944938a5297d49ad4336a818c06e57fff286efdcafdbafbeeac7d3f99b9eef3e
+    attachments: []
+  - index: 1
+    message-id: <BAY117-F8A51AB1A746DB7C5C868BB4910@phx.gbl>
+    body_sha3_256: 422341bf16df7e41fb3bcafa1a92ccbea9f91ea74632adb2507d68cc7d54af73
+    attachments: []
+  - index: 2
+    message-id: <BAY103-F36A0C2427095C72D377474C2940@phx.gbl>
+    body_sha3_256: d225cbc5be1ca2be1a8f853970f231b62ec3330f0ee129f8ace48a9311d06d60
+    attachments: []
+  - index: 3
+    message-id: <BAY103-F115CA57A21C2C56030731CE2950@phx.gbl>
+    body_sha3_256: e80a63ec4a0351f0164b14e8775365ba09f718a6f890ee6ba1aad8ccb7e0e9ed
+    attachments: []
+  - index: 4
+    message-id: <BAY103-F11410841CDE610A1EFC53E2950@phx.gbl>
+    body_sha3_256: dca5294e859b47aa37270e39c8f8db90adc00daa72641be59e7b9df57f5a01ba
+    attachments: []
+  - index: 5
+    message-id: <BAY103-F381B373856C3F8BAEF7649E2950@phx.gbl>
+    body_sha3_256: 39ada45824094734c91d797342f34490649a2ffd91cf7b50a72ad4d6b979f188
+    attachments: []
+  - index: 6
+    message-id: <BAY103-F9B586FFD1CFE6D9112763E2950@phx.gbl>
+    body_sha3_256: 9513af448c11fe9a935cee3daae6e6b130a94f5f53840a0fff742a0707633b13
+    attachments: []
+  - index: 7
+    message-id: <BAY103-F802BFA93952CB192373C4E2950@phx.gbl>
+    body_sha3_256: 3cdb5195c0a06164e53d485fd82088a1a3bf36d35f4060d411d9694568dcc881
+    attachments: []
+  - index: 8
+    message-id: <BAY103-F40D7A4EF5AC184C9769209E2950@phx.gbl>
+    body_sha3_256: 1d09c99291191793f06aa041d6f4c32a17163ee129adb8ebf1a8275714f784cd
+    attachments: []
+  - index: 9
+    message-id: <BAY103-F1C665A56AE3A65074D38DE2950@phx.gbl>
+    body_sha3_256: 90c4f6641980ad881385a3583f14d29849d1fd8061c6e899e105b0f12d6d89c2
+    attachments: []
+  - index: 10
+    message-id: <BAY103-F192188E821DBDA96D8C790C27E0@phx.gbl>
+    body_sha3_256: 44f3ce8f1438a1de5f9e763ff0ab6fa8d2375accfe5ca589f777304f24e6f109
+    attachments: []
+  - index: 11
+    message-id: <BAY103-F40786C94EB9152F563E277ED720@phx.gbl>
+    body_sha3_256: 1312c69e645b07b003ade1c024f2631f1ac2b92f9766eac1db8dd4f50769a544
+    attachments: []
