@@ -104,9 +104,8 @@ def run_tests(args):
                 continue
             test_args = collections.namedtuple('testargs', ['parse_html', 'generator'])(parse_html, gen_type)
             archie = interfacer.Archiver(archiver, test_args)
-            while len(mboxfiles) > 0:
-                mboxfile = mboxfiles.pop(0)
-                sys.stderr.write("Starting to process %s\n" % mboxfile)
+            for mboxfile in mboxfiles:
+                sys.stderr.write("Starting to process %s using %s\n" % (mboxfile,gen_type))
                 mbox = mailbox.mbox(mboxfile, None if args.nomboxo else MboxoFactory, create=False)
                 no_messages = len(mbox.keys())
                 no_tests = len(tests)
