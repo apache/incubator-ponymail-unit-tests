@@ -124,8 +124,8 @@ def run_tests(args):
                     key = test['index']
                     message_raw = _raw(args, mbox, key)
                     message = mbox.get(key)
-                    # Mock archived-at
-                    if 'MOCK_AAT' in _env:
+                    # Mock archived-at for slightly broken medium generators
+                    if 'MOCK_AAT' in _env and gen_type == 'medium':
                         mock_aat = email.utils.formatdate(int(_env['MOCK_AAT']), False)
                         try:
                             message.replace_header('archived-at', mock_aat)
