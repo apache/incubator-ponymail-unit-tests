@@ -35,21 +35,30 @@ class Archiver(object):
         # <= 0.11:
         if 'parseHTML' in self.expected_archie_parameters:
             if hasattr(args, 'generator'):
-              archiver_.archiver_generator = args.generator
+                archiver_.archiver_generator = args.generator
             self.archie = archiver_.Archiver(parseHTML=args.parse_html)
+            params = inspect.signature(archiver_.Archiver.list_url).parameters
+            if '_mlist' in params:
+                self.version = '11'
+            elif 'mlist' in params:
+                self.version = '10'
+            else:
+                self.version = '?'
         # Ponymail 12+
         elif 'skipff' in self.expected_archie_parameters:
             self.archie = archiver_.Archiver(generator=getattr(args, 'generator', None),
                                              parse_html=args.parse_html,
                                              ignore_body=None,  # To be provided later
                                              skipff=True)
+            self.version = '12'
         else: # Foal
             self.archie = archiver_.Archiver(generator=getattr(args, 'generator', None),
                                              parse_html=args.parse_html,
                                              ignore_body=None) # To be provided later
+            self.version = 'foal'
 
         if 'raw_msg' in self.expected_compute_parameters:
-          self.compute = self._compute_foal
+            self.compute = self._compute_foal
         # PM 0.12 parameters
         elif 'args' in self.expected_compute_parameters:
             self.compute = self._compute_12
