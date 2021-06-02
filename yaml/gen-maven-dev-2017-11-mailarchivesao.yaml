@@ -3,6 +3,7 @@ args:
     --generate gen-maven-dev-2017-11-mailarchivesao_ponymail.yaml --root ../ponymail
   env:
     MOCK_GMTIME: '0'
+    MOCK_AAT: '0'
 generators:
   corpus/maven-dev-2017-11-mailarchivesao.mbox:
     cluster:
