@@ -44,6 +44,7 @@ if __name__ == '__main__':
     tests_total = 0
     sub_success = 0
     sub_failure = 0
+    sub_skipped = 0
     now = time.time()
 
     failbreak = False
@@ -87,10 +88,12 @@ if __name__ == '__main__':
                         break
                 finally:
                     # Fetch successes and failures from this spec run, add to total
-                    m = re.search(r"^\[DONE\] (\d+) tests run, (\d+) failed.", rv.decode('ascii'), re.MULTILINE)
+                    m = re.search(r"^\[DONE\] (\d+) tests run, (\d+) failed\.( Skipped (\d+)\.)?", rv.decode('ascii'), re.MULTILINE)
                     if m:
                         sub_success += int(m.group(1)) - int(m.group(2))
                         sub_failure += int(m.group(2))
+                        if m.group(4) is not None:
+                            sub_skipped += int(m.group(4))
         if failbreak:
             break
 
@@ -101,6 +104,7 @@ if __name__ == '__main__':
     print("Total tests run: %4u" % (sub_success+sub_failure))
     print("Tests succeeded: %4u" % sub_success)
     print("Tests failed:    %4u" % sub_failure)
+    print("Tests skipped:   %4u" % sub_skipped)
     print("-------------------------------------")
     if tests_failure:
         sys.exit(-1)

@@ -127,6 +127,7 @@ def run_tests(args):
                 else:
                     print("[PASS] index %u" % (key))
         mboxfiles = []
+    # N.B. The following line is parsed by runall.py
     print("[DONE] %u tests run, %u failed." % (tests_run, errors))
     if errors:
         sys.exit(-1)

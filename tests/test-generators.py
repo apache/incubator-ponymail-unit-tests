@@ -92,6 +92,7 @@ def run_tests(args):
     except:
         import plugins.generators as generators
     errors = 0
+    skipped = 0
     tests_run = 0
     yml = yaml.safe_load(open(args.load, 'r'))
     _env = {}
@@ -136,6 +137,7 @@ def run_tests(args):
                     if args.skipnodate and not dateheader:
                         print("""[SKIP] %s, index %2u: No date header found and --skipnodate specified, skipping this test!""" %
                                          (gen_type, key, ))
+                        skipped += 1
                         continue
                     if msgid != test['message-id']:
                         sys.stderr.write("""[SEQ?] %s, index %2u: Expected '%s', got '%s'!\n""" %
@@ -162,7 +164,8 @@ def run_tests(args):
     if args.dropin and errors:
         sys.stderr.write("Writing replacement yaml as --dropin was specified\n")
         yaml.safe_dump(yml, open(args.load, "w"), sort_keys=False)
-    print("[DONE] %u tests run, %u failed." % (tests_run, errors))
+    # N.B. The following line is parsed by runall.py
+    print("[DONE] %u tests run, %u failed. Skipped %u." % (tests_run, errors, skipped))
     if errors:
         sys.exit(-1)
 
