@@ -147,7 +147,9 @@ def run_tests(args):
                     json = archie.compute_updates(fake_args, lid, False, message, message_raw)
 
                     expected = test['generated']
-                    alternate = test.get('alternate') # alternate value for v0.10
+                    alternate = expected
+                    if archie.version == '10':
+                        alternate = test.get('alternate') # alternate value for v0.10
                     actual = json['mid']
                     if actual != expected and actual != alternate:
                         errors += 1
