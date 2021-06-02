@@ -120,6 +120,11 @@ def run_tests(args):
                     message_raw = _raw(args, mbox, key)
                     message = mbox.get(key)
                     msgid =(message.get('message-id') or '').strip()
+                    dateheader = message.get('date')
+                    if args.skipnodate and not dateheader:
+                        sys.stderr.write("""[SKIP] %s, index %2u: No date header found and --skipnodate specified, skipping this test!\n""" %
+                                         (gen_type, key, ))
+                        continue
                     if msgid != test['message-id']:
                         sys.stderr.write("""[SEQ?] %s, index %2u: Expected '%s', got '%s'!\n""" %
                                         (gen_type, key, test['message-id'], msgid))
@@ -158,6 +163,8 @@ def main():
                         help="Root directory of Apache Pony Mail")
     parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
                         help = 'Skip Mboxo processing')
+    parser.add_argument('--skipnodate', dest = 'skipnodate', action='store_true',
+                        help = 'Skip emails with no Date: header (useful for medium generator tests)')
     args = parser.parse_args()
 
     if args.rootdir:

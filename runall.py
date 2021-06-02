@@ -25,6 +25,8 @@ if __name__ == '__main__':
                         help = 'Skip Mboxo processing')
     parser.add_argument('--fof', dest='failonfail', action='store_true',
                         help="Stop running more tests if an error is encountered")
+    parser.add_argument('--skipnodate', dest='skipnodate', action='store_true',
+                        help="Skip generator tests with no Date: header")
     args = parser.parse_args()
 
     yamldir = args.yamldir or "yaml"
@@ -67,6 +69,8 @@ if __name__ == '__main__':
                     if args.gtype and test_type == 'generators':
                         cliargs.append('--generators')
                         cliargs.extend(args.gtype)
+                    if args.skipnodate and test_type == 'generators':
+                        cliargs.append('--skipnodate')
                     rv = subprocess.check_output(cliargs, env=env)
                     tests_success += 1
                 except subprocess.CalledProcessError as e:
