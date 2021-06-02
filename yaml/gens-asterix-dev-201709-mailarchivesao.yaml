@@ -593,9 +593,11 @@ generators:
     - index: 34
       message-id: <710018FB-CE02-4B9A-BC36-A6B3A9A23CAD@apache.org>
       generated: 824bbd05c7ca1d2fa6acfc6212d225d70cb32cc54d4cf187f29675c0@<dev.asterixdb.apache.org>
+      alternate: 39d9ced47a8e82e7b40b088f4803e437a9889531d6eccaeb7e625a98@<dev.asterixdb.apache.org>
     - index: 35
       message-id: <6D84F738-EF80-4BA9-AEFF-47C21CA11467@apache.org>
       generated: 0b2ea9714eebf98f96251930161f76d5eadc47d47b57a16b8dd4e603@<dev.asterixdb.apache.org>
+      alternate: 97ac55a1002d6ade37525c558af2b882007c67755d923b3114d47ad0@<dev.asterixdb.apache.org>
     - index: 36
       message-id: <E8CF05A0-0B7B-4A35-80C8-AC5C2D9F52D2@gmail.com>
       generated: 6c647759d2fb65c63da73b8f0065adc0ea95a8add8493395d999cf2a@<dev.asterixdb.apache.org>
