@@ -1,3 +1,6 @@
+args:
+  env:
+    MOCK_AAT: "0"
 generators:
   corpus/maven_duplicates_2017_mboxvm.mbox: null
   corpus/maven_duplicates_2017_mailarchivesao.mbox: null
