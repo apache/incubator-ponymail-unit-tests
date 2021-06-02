@@ -64,7 +64,7 @@ if __name__ == '__main__':
                     cliargs = [PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file,]
                     if args.nomboxo:
                         cliargs.append('--nomboxo')
-                    if args.gtype:
+                    if args.gtype and test_type == 'generators':
                         cliargs.append('--generators')
                         cliargs.extend(args.gtype)
                     rv = subprocess.check_output(cliargs, env=env)
