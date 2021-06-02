@@ -1,3 +1,4 @@
+# Alternates in index 34+35 indicate a change in format=flowed parsing
 args:
   cmd: tests/test-generators.py --mbox corpus/asterix-dev-201709-mailarchivesao.mbox
     --generate yaml/gens-asterix-dev-201709-mailarchivesao.yaml --root ../ponymail
@@ -433,9 +434,11 @@ generators:
     - index: 34
       message-id: <710018FB-CE02-4B9A-BC36-A6B3A9A23CAD@apache.org>
       generated: d769bef0abdf69dd32325fa997561ee0a8b02b3eb4bd09074e15d639@1506129119@<dev.asterixdb.apache.org>
+      alternate: b6cc35372810a838aa38b2298d599db6cb4c9139e837ec5d9e66098b@1506129119@<dev.asterixdb.apache.org>
     - index: 35
       message-id: <6D84F738-EF80-4BA9-AEFF-47C21CA11467@apache.org>
       generated: efcc2cd48e8b43c772438754af7beda3a12fbde19a683339dcfac8cb@1506216316@<dev.asterixdb.apache.org>
+      alternate: d9a69ff7b9399b19a2984492945c550f64796ce8933c882ff2a2cc50@1506216316@<dev.asterixdb.apache.org>
     - index: 36
       message-id: <E8CF05A0-0B7B-4A35-80C8-AC5C2D9F52D2@gmail.com>
       generated: 7202d52652c68a0ab44c6478d427ffc10ec7097dc5a31c90cd54222d@1506216487@<dev.asterixdb.apache.org>
