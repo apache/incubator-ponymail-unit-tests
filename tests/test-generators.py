@@ -93,6 +93,8 @@ def run_tests(args):
     tests_run = 0
     yml = yaml.safe_load(open(args.load, 'r'))
     generator_names = generators.generator_names() if hasattr(generators, 'generator_names') else ['full', 'medium', 'cluster', 'legacy']
+    if args.generators:
+        generator_names = args.generators
     mboxfiles = []
     for file, run in yml['generators'].items():
         mboxfiles.append(file)

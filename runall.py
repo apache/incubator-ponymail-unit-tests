@@ -15,6 +15,10 @@ if __name__ == '__main__':
                         help="Root directory of Apache Pony Mail")
     parser.add_argument('--load', dest='load', type=str, nargs='+',
                         help="Load only specific yaml spec files instead of all test specs")
+    parser.add_argument('--ttype', dest='ttype', type=str, nargs='+',
+                        help="Run only specified test types (generators, parsing, etc)")
+    parser.add_argument('--gtype', dest='gtype', type=str, nargs='+',
+                        help="Run only specified generators (medium, cluster, dkim, full, etc)")
     parser.add_argument('--yamldir', dest='yamldir', type=str, action='store',
                         help="Load yaml specs from alternate directory")    
     parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
@@ -43,6 +47,9 @@ if __name__ == '__main__':
             yml = yaml.safe_load(f)
             env = os.environ # always pass parent environ
             for test_type in yml:
+                if args.ttype and test_type not in args.ttype:
+                    print("Skipping test type %s due to --ttype flag" % test_type)
+                    continue
                 if test_type == 'args':
                      # Environment variable override, e.g. MOCK_GMTIME
                     env_ = yml[test_type].get("env", None)
@@ -54,14 +61,13 @@ if __name__ == '__main__':
                 # Use stderr so appears in correct sequence in logs
                 print("Running '%s' tests from %s..." % (test_type, spec_file), file=sys.stderr)
                 try:
+                    cliargs = [PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file,]
                     if args.nomboxo:
-                        rv = subprocess.check_output(
-                                (PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file, '--nomboxo'),
-                                 env=env)
-                    else:
-                        rv = subprocess.check_output(
-                                (PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file),
-                                 env=env)
+                        cliargs.append('--nomboxo')
+                    if args.gtype:
+                        cliargs.append('--generators')
+                        cliargs.extend(args.gtype)
+                    rv = subprocess.check_output(cliargs, env=env)
                     tests_success += 1
                 except subprocess.CalledProcessError as e:
                     rv = e.output
