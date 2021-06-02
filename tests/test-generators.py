@@ -201,9 +201,9 @@ def main():
         save_gmtime = time.gmtime
         def _time_gmtime(secs=None):
             if secs is None:
-                callers = traceback.extract_stack(limit=1)
-                [filename, _, _, _] = callers[0]
-                if filename.endswith("/tools/archiver.py"):
+                callers = traceback.extract_stack(limit=2) # want last-1 and last (i.e. here)
+                [filename, _, _, _] = callers[0] # This is last-1, i.e. my caller
+                if filename.endswith("/tools/archiver.py") or filename.endswith("tools/generators.py"):
                     return save_gmtime(0)
             return save_gmtime(secs)
 
