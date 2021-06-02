@@ -10,6 +10,7 @@ import yaml
 import argparse
 import collections
 import interfacer
+import time
 import email.utils
 
 parse_html = False
@@ -150,9 +151,17 @@ def run_tests(args):
                         errors += 1
                         sys.stderr.write("""[FAIL] %s, index %2u: Expected '%s', got '%s'!\n""" %
                                         (gen_type, key, expected, actual))
+                        if args.dropin and gen_type == args.dropin:
+                            if expected != actual:
+                                test['generated'] = actual
+                            else:
+                                test['alternate'] = actual
                     else:
                         print("[PASS] %s index %u" % (gen_type, key))
         mboxfiles = [] # reset for the next set of tests
+    if args.dropin and errors:
+        sys.stderr.write("Writing replacement yaml as --dropin was specified\n")
+        yaml.safe_dump(yml, open(args.load, "w"), sort_keys=False)
     print("[DONE] %u tests run, %u failed." % (tests_run, errors))
     if errors:
         sys.exit(-1)
@@ -174,6 +183,8 @@ def main():
                         help="Root directory of Apache Pony Mail")
     parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
                         help = 'Skip Mboxo processing')
+    parser.add_argument('--dropin', dest = 'dropin', type=str,
+                        help = 'Perform drop-in replacement of unit test results for the specified generator type [devs only!]')
     parser.add_argument('--skipnodate', dest = 'skipnodate', action='store_true',
                         help = 'Skip emails with no Date: header (useful for medium generator tests)')
     args = parser.parse_args()

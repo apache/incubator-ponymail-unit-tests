@@ -20,7 +20,10 @@ if __name__ == '__main__':
     parser.add_argument('--gtype', dest='gtype', type=str, nargs='+',
                         help="Run only specified generators (medium, cluster, dkim, full, etc)")
     parser.add_argument('--yamldir', dest='yamldir', type=str, action='store',
-                        help="Load yaml specs from alternate directory")    
+                        help="Load yaml specs from alternate directory")
+    parser.add_argument('--dropin', dest='dropin', type=str, action='store',
+                        help="If set to a specific generator name, replaces its unit test results with the current "
+                             "output in the yaml tests")
     parser.add_argument('--nomboxo', dest = 'nomboxo', action='store_true',
                         help = 'Skip Mboxo processing')
     parser.add_argument('--fof', dest='failonfail', action='store_true',
@@ -69,6 +72,8 @@ if __name__ == '__main__':
                     if args.gtype and test_type == 'generators':
                         cliargs.append('--generators')
                         cliargs.extend(args.gtype)
+                    if args.dropin:
+                        cliargs.extend(['--dropin', args.dropin])
                     if args.skipnodate and test_type == 'generators':
                         cliargs.append('--skipnodate')
                     rv = subprocess.check_output(cliargs, env=env)
