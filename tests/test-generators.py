@@ -134,7 +134,7 @@ def run_tests(args):
                     msgid =(message.get('message-id') or '').strip()
                     dateheader = message.get('date')
                     if args.skipnodate and not dateheader:
-                        print("""[SKIP] %s, index %2u: No date header found and --skipnodate specified, skipping this test!\n""" %
+                        print("""[SKIP] %s, index %2u: No date header found and --skipnodate specified, skipping this test!""" %
                                          (gen_type, key, ))
                         continue
                     if msgid != test['message-id']:
