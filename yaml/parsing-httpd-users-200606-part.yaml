@@ -4,6 +4,8 @@ args:
   cmd: tests/test-parsing.py --generate parsing-httpd-users-200606-part.yaml --mbox corpus/httpd-users-200606-part.mbox
     --rootdir ../ponymail/
   parse_html: false
+  env:
+    ALT_VERSION: foal
 parsing:
   corpus/httpd-users-200606-part.mbox:
   - index: 0

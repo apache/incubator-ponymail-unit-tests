@@ -2,6 +2,8 @@ args:
   cmd: tests/test-parsing.py --mbox corpus/asterix-dev-201709-mailarchivesao.mbox
     --generate yaml/pars-asterix-dev-201709-mailarchivesao.yaml --root ../ponymail
   parse_html: false
+  env:
+    ALT_VERSION: foal
 parsing:
   corpus/asterix-dev-201709-mailarchivesao.mbox:
   - index: 0

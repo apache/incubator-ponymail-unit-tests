@@ -3,6 +3,8 @@
 args:
   cmd: tests/test-generators.py --generate generate-httpd-users-200606-part.yaml --mbox corpus/httpd-users-200606-part.mbox
     --rootdir ../ponymail/
+  env:
+    ALT_VERSION: foal
 generators:
   corpus/httpd-users-200606-part.mbox:
     cluster:

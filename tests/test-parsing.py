@@ -81,6 +81,9 @@ def run_tests(args):
 
     test_args = collections.namedtuple('testargs', ['parse_html'])(parse_html)
     archie = interfacer.Archiver(archiver, test_args)
+    _env = {}
+    if 'args' in yml and 'env' in yml['args']:
+        _env = yml['args']['env']
 
     mboxfiles = []
 
@@ -114,7 +117,7 @@ def run_tests(args):
                         body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
                 expected = test['body_sha3_256']
                 alternate = expected
-                if archie.version == '10':
+                if archie.version == '10' or archie.version == _env.get('ALT_VERSION'):
                     alternate = test.get('alternate') # alternate value for v0.10
                 if body_sha3_256 != expected and body_sha3_256 != alternate:
                     errors += 1

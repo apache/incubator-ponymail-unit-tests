@@ -148,7 +148,7 @@ def run_tests(args):
 
                     expected = test['generated']
                     alternate = expected
-                    if archie.version == '10':
+                    if archie.version == '10' or archie.version == _env.get('ALT_VERSION'):
                         alternate = test.get('alternate') # alternate value for v0.10
                     actual = json['mid']
                     if actual != expected and actual != alternate:

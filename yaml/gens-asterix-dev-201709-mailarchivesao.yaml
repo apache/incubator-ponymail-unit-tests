@@ -4,6 +4,7 @@ args:
     --generate yaml/gens-asterix-dev-201709-mailarchivesao.yaml --root ../ponymail
   env:
     MOCK_GMTIME: "0"
+    ALT_VERSION: foal
 generators:
   corpus/asterix-dev-201709-mailarchivesao.mbox:
     cluster:
