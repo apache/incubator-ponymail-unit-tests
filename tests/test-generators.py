@@ -10,6 +10,7 @@ import yaml
 import argparse
 import collections
 import interfacer
+import email.utils
 
 parse_html = False
 nonce = None
@@ -92,6 +93,9 @@ def run_tests(args):
     errors = 0
     tests_run = 0
     yml = yaml.safe_load(open(args.load, 'r'))
+    _env = {}
+    if 'args' in yml and 'env' in yml['args']:
+        _env = yml['args']['env']
     generator_names = generators.generator_names() if hasattr(generators, 'generator_names') else ['full', 'medium', 'cluster', 'legacy']
     if args.generators:
         generator_names = args.generators
@@ -119,6 +123,13 @@ def run_tests(args):
                     key = test['index']
                     message_raw = _raw(args, mbox, key)
                     message = mbox.get(key)
+                    # Mock archived-at
+                    if 'MOCK_AAT' in _env:
+                        mock_aat = email.utils.formatdate(int(_env['MOCK_AAT']), False)
+                        try:
+                            message.replace_header('archived-at', mock_aat)
+                        except:
+                            message['archived-at'] = mock_aat
                     msgid =(message.get('message-id') or '').strip()
                     dateheader = message.get('date')
                     if args.skipnodate and not dateheader:
