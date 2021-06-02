@@ -21,6 +21,7 @@ CLI args for `runall.py`:
 Environment variables:
 - `PYTHONHASHSEED=0`: this ensures that Sets etc return their entries in a deterministic order
 - `MOCK_GMTIME=0`: override time.gmtime() to use the value '0' if none is provided
+- `MOCK_AAT=0`: override archived-at datetimes to unix epoch. Used for certain medium generator tests
   
 The above variables are useful for some tests to ensure reproducability.
 However using them may mask bugs in the code, so they should only be used where necessary.
