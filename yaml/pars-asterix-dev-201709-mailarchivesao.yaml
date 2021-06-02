@@ -1,3 +1,4 @@
+# Alternates at index 34+35 indicate a change in format=flowed parsing in foal
 args:
   cmd: tests/test-parsing.py --mbox corpus/asterix-dev-201709-mailarchivesao.mbox
     --generate yaml/pars-asterix-dev-201709-mailarchivesao.yaml --root ../ponymail
