@@ -146,12 +146,10 @@ def run_tests(args):
                     lid = args.lid or archiver.normalize_lid(message.get('list-id', '??'))
                     json = archie.compute_updates(fake_args, lid, False, message, message_raw)
 
-                    expected = test['generated']
-                    alternate = expected
-                    if archie.version == '10' or archie.version == _env.get('ALT_VERSION'):
-                        alternate = test.get('alternate') # alternate value for v0.10
+                    # get override for version (if any)
+                    expected = test.get(archie.version, test['generated'])
                     actual = json['mid']
-                    if actual != expected and actual != alternate:
+                    if actual != expected:
                         errors += 1
                         sys.stderr.write("""[FAIL] %s, index %2u: Expected '%s', got '%s'!\n""" %
                                         (gen_type, key, expected, actual))

@@ -39,9 +39,9 @@ class Archiver(object):
             self.archie = archiver_.Archiver(parseHTML=args.parse_html)
             params = inspect.signature(archiver_.Archiver.list_url).parameters
             if '_mlist' in params:
-                self.version = '11'
+                self.version = 'v0.11'
             elif 'mlist' in params:
-                self.version = '10'
+                self.version = 'v0.10'
             else:
                 self.version = '?'
         # Ponymail 12+
@@ -50,7 +50,7 @@ class Archiver(object):
                                              parse_html=args.parse_html,
                                              ignore_body=None,  # To be provided later
                                              skipff=True)
-            self.version = '12'
+            self.version = 'v0.12'
         else: # Foal
             self.archie = archiver_.Archiver(generator=getattr(args, 'generator', None),
                                              parse_html=args.parse_html,

@@ -3,8 +3,6 @@ args:
   cmd: tests/test-parsing.py --mbox corpus/asterix-dev-201709-mailarchivesao.mbox
     --generate yaml/pars-asterix-dev-201709-mailarchivesao.yaml --root ../ponymail
   parse_html: false
-  env:
-    ALT_VERSION: foal
 parsing:
   corpus/asterix-dev-201709-mailarchivesao.mbox:
   - index: 0
@@ -146,12 +144,14 @@ parsing:
   - index: 34
     message-id: <710018FB-CE02-4B9A-BC36-A6B3A9A23CAD@apache.org>
     body_sha3_256: a211db5af73a98c270965aab423e1c12b92efd811e72326250da5779225cae34
-    alternate: c75e7fc37c217084a30a6f42b08c3454b8beb9fd6c43f68a46ea941ff9f41b8a
+    v0.10: c75e7fc37c217084a30a6f42b08c3454b8beb9fd6c43f68a46ea941ff9f41b8a
+    foal: c75e7fc37c217084a30a6f42b08c3454b8beb9fd6c43f68a46ea941ff9f41b8a
     attachments: []
   - index: 35
     message-id: <6D84F738-EF80-4BA9-AEFF-47C21CA11467@apache.org>
     body_sha3_256: 85637822a7c46012435df73c12032aebd65c5a36689a5a8e9d768faf22ddc74b
-    alternate: 2b3349da360a1ebfba7c7e84a923812451bedb0ee6df87609d8283e4705205f9
+    v0.10: 2b3349da360a1ebfba7c7e84a923812451bedb0ee6df87609d8283e4705205f9
+    foal: 2b3349da360a1ebfba7c7e84a923812451bedb0ee6df87609d8283e4705205f9
     attachments: []
   - index: 36
     message-id: <E8CF05A0-0B7B-4A35-80C8-AC5C2D9F52D2@gmail.com>

@@ -31,7 +31,7 @@ Alternate values for some tests
 Version 0.10 of Ponymail never detects format=flowed mails.
 This is because the content-type entry was not set up in msg_metadata
 As a consequence, some mails will be parsed differently.
-The test scripts allow for an alternate value for some tests.
+The test scripts allow for an alternate value for some tests, shown as v0.10.
 
 PLEASE NOTE
 ===========
