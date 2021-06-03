@@ -64,8 +64,8 @@ if __name__ == '__main__':
                             env[key] = val
                     continue
                 tests_total += 1
-                # Use stderr so appears in correct sequence in logs
-                print("Running '%s' tests from %s..." % (test_type, spec_file), file=sys.stderr)
+                # Use stderr so appears in correct sequence in logs; flush seems to be necessary for GitHub actions
+                print("Running '%s' tests from %s..." % (test_type, spec_file), file=sys.stderr, flush=True)
                 try:
                     cliargs = [PYTHON3, 'tests/test-%s.py' % test_type, '--rootdir', args.rootdir, '--load', spec_file,]
                     if args.nomboxo:
@@ -81,7 +81,7 @@ if __name__ == '__main__':
                     tests_success += 1
                 except subprocess.CalledProcessError as e:
                     rv = e.output
-                    print("%s test from %s failed with code %d" % (test_type, spec_file, e.returncode), file=sys.stderr)
+                    print("FAIL: %s test from %s failed with code %d" % (test_type, spec_file, e.returncode), file=sys.stderr, flush=True)
                     tests_failure += 1
                     if args.failonfail:
                         failbreak = True
