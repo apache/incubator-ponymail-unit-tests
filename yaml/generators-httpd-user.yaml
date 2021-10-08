@@ -1,8 +1,8 @@
 args:
   cmd: tests/test-generators.py --generate yaml/generators-httpd-user.yaml --mbox
-    corpus/users_httpd_apache_org_2020-07.mbox --rootdir /x1/incubator-ponymail-foal/
+    corpus/httpd-users-2020-07.mbox --rootdir /x1/incubator-ponymail-foal/
 generators:
-  corpus/users_httpd_apache_org_2020-07.mbox:
+  corpus/httpd-users-2020-07.mbox:
     cluster:
     - index: 0
       message-id: <CAPORhP5gkEyrAtqi+uAvJStuCkEqwrO95BFbH0OKaszm=8JuRw@mail.gmail.com>

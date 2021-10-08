@@ -1,9 +1,9 @@
 args:
   cmd: tests/test-parsing.py --generate yaml/parsing-users-httpd-2020-07.yaml --mbox
-    corpus/users_httpd_apache_org_2020-07.mbox --rootdir /x1/incubator-ponymail-foal
+    corpus/httpd-users-2020-07.mbox --rootdir /x1/incubator-ponymail-foal
   parse_html: false
 parsing:
-  corpus/users_httpd_apache_org_2020-07.mbox:
+  corpus/httpd-users-2020-07.mbox:
   - index: 0
     message-id: <CAPORhP5gkEyrAtqi+uAvJStuCkEqwrO95BFbH0OKaszm=8JuRw@mail.gmail.com>
     body_sha3_256: 119240fa84d7b24c31760daeff3c1f402fd3b96cd43dab7d0049fdfc5d295758

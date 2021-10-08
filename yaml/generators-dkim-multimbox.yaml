@@ -1,8 +1,8 @@
 args:
   cmd: tests/test-generators.py --generate yaml/generators-maven-dev-multimbox.yaml
-    --mbox corpus/maven_dev_2017_mailarchivesao.mbox --rootdir /x1/incubator-ponymail-foal/
+    --mbox corpus/maven-dev-2017-mailarchivesao.mbox --rootdir /x1/incubator-ponymail-foal/
 generators:
-  corpus/maven_dev_2017_mailarchivesao.mbox:
+  corpus/maven-dev-2017-mailarchivesao.mbox:
     dkim:
     - index: 0
       message-id: <005201d3685e$1ffb1700$5ff14500$@apache.org>
@@ -3196,7 +3196,7 @@ generators:
     - index: 1063
       message-id: ''
       generated: 0q85fjdb9cntygnfnbjdkk7ftbdw2td7
-  corpus/maven_dev_2017_listsao.mbox:
+  corpus/maven-dev-2017-listsao.mbox:
     dkim:
     - index: 0
       message-id: <005201d3685e$1ffb1700$5ff14500$@apache.org>
