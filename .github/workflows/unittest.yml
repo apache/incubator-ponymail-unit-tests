@@ -6,9 +6,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    continue-on-error: true # want to test all versions
+    # continue-on-error: true # want to test all versions
     strategy:
-      max-parallel: 4
+      max-parallel: 1
       matrix:
         python-version: [3.8, 3.12, 3.13]
 
@@ -46,6 +46,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip list
     - name: Ponymail 0.11 Init
       run: |
         cd ponymail-0.11
