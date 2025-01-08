@@ -6,11 +6,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    continue-on-error: true # want to test all versions
     strategy:
       max-parallel: 4
       matrix:
-#         python-version: [2.7, 3.5, 3.6, 3.7]
-        python-version: [3.7, 3.8]
+        python-version: [3.8, 3.12, 3.13]
 
     steps:
     - uses: actions/checkout@master
@@ -39,7 +39,7 @@ jobs:
         repository: apache/incubator-ponymail-foal
         path: ponymail-foal
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
