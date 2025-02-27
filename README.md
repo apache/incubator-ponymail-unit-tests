@@ -31,7 +31,12 @@ Alternate values for some tests
 Version 0.10 of Ponymail never detects format=flowed mails.
 This is because the content-type entry was not set up in msg_metadata
 As a consequence, some mails will be parsed differently.
-The test scripts allow for an alternate value for some tests, shown as v0.10.
+The test scripts allow for an alternate value for some tests, shown as 'v0.10' or 'pmfoal'.
+
+Python 12+ changes the output from email.as_bytes() for headers where the value starts after
+a line-wrap. This affects the full generator. To allow for this in Ponymail Foal, whilst still
+detecting other changes, such alternate values are flagged with 'foal12'.
+This falls back to 'foal' if not defined.
 
 PLEASE NOTE
 ===========

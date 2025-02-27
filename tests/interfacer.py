@@ -55,7 +55,10 @@ class Archiver(object):
             self.archie = archiver_.Archiver(generator=getattr(args, 'generator', None),
                                              parse_html=args.parse_html,
                                              ignore_body=None) # To be provided later
-            self.version = 'foal'
+            if sys.version_info >= (3, 12):
+                self.version = 'foal12'
+            else:
+                self.version = 'foal'
 
         if 'raw_msg' in self.expected_compute_parameters:
             self.compute = self._compute_foal

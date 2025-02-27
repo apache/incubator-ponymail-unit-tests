@@ -1202,6 +1202,7 @@ generators:
     - index: 80
       message-id: <ou13no$4jo$1@blaine.gmane.org>
       generated: 1f1097ab123c6f0ae19f564d1800e9dceca5cae7c302cd81aabf2fca@<dev.maven.apache.org>
+      foal12: 5bfecee5a98b585f21f22d01ea3438c3f5cffe180c529fd0c0e2806f@<dev.maven.apache.org>
     - index: 81
       message-id: <git-pr-136-maven@git.apache.org>
       generated: 1b0b31800659704bbd40d71b8e8e8f543c83d7312ba1fc75f1f864f0@<dev.maven.apache.org>
@@ -1265,6 +1266,7 @@ generators:
     - index: 101
       message-id: <oubr4v$9b9$1@blaine.gmane.org>
       generated: b5e6110ae6b92f25a064e4e29296b601be6fafeafbecda6b645b06c8@<dev.maven.apache.org>
+      foal12: 802735116ecb92f88f15a5c8d2e28ad7276110eec5953ebe10b0171a@<dev.maven.apache.org>
     - index: 102
       message-id: <CACLE=7O-N1XyKd3UdwjE7tuA0tPO5nyy61d19J9BixVKoY6GgA@mail.gmail.com>
       generated: c31ff30b5af7d6b2876d92793a157dd52b6f7baff96068551c541384@<dev.maven.apache.org>

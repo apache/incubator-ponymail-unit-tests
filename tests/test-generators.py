@@ -147,7 +147,10 @@ def run_tests(args):
                     json = archie.compute_updates(fake_args, lid, False, message, message_raw)
 
                     # get override for version (if any)
-                    expected = test.get(archie.version, test['generated'])
+                    if archie.version == 'foal12':
+                        expected = test.get(archie.version, test.get('foal', test['generated']))
+                    else:
+                        expected = test.get(archie.version, test['generated'])
                     actual = json['mid']
                     if actual != expected:
                         errors += 1

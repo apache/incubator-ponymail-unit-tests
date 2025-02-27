@@ -116,7 +116,10 @@ def run_tests(args):
                     if not json.get('html_source_only'):
                         body_sha3_256 = hashlib.sha3_256(json['body'].encode('utf-8')).hexdigest()
                 # get override for version (if any)
-                expected = test.get(archie.version, test['body_sha3_256'])
+                if archie.version == 'foal12':
+                    expected = test.get(archie.version, test.get('foal', test['body_sha3_256']))
+                else:
+                    expected = test.get(archie.version, test['body_sha3_256'])
                 if body_sha3_256 != expected:
                     errors += 1
                     sys.stderr.write("""[FAIL] parsing index %2u: Expected: %s Got: %s\n""" %
