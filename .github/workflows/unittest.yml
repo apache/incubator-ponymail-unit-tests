@@ -1,4 +1,7 @@
 name: Test corpus against versions
+# The test results have been patched to fix currently known (unfixed) errors in Python 3.12+
+# This is to make it easier to detect additional errors
+# See unittest312.yml for full tests
 
 on: [push,workflow_dispatch]
 
